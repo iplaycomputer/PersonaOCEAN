@@ -1,6 +1,7 @@
 # PersonaOCEAN
 
 [![Validate Roles](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/validate.yml/badge.svg)](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/validate.yml)
+[![Dependabot Status](https://img.shields.io/badge/Dependabot-enabled-brightgreen?logo=dependabot)](https://docs.github.com/code-security/dependabot)
 
 A simple Discord bot that maps Big Five (OCEAN) scores to clear archetype roles and departments. Fast, clean, and grounded in a transparent YAML taxonomy.
 
