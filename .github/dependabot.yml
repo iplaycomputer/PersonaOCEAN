@@ -7,13 +7,13 @@ updates:
       day: "monday"
       time: "08:00"
     groups:
-      security-updates:
-        applies-to: security-updates
-      regular-updates:
-        applies-to: version-updates
+      all-dependencies:
+        patterns:
+          - "*"                 # Group all dependency updates into a single PR
     ignore:
       - dependency-name: "discord.py"
-        versions: ["<2.0.0"]    # Ignore outdated major versions
+        versions:
+          - "<2.0.0"           # Ignore outdated major versions
     commit-message:
-      prefix: "deps:"
+      prefix: "deps"
       include: "scope"
