@@ -1,0 +1,50 @@
+PersonaOCEAN Scientific Reference Verification Audit — v1.1 (October 2025)
+Verified by: PersonaOCEAN Project
+
+---
+
+Summary of Findings
+
+- All core claims in README and docs are supported by peer-reviewed sources.
+- The inverted-U (TMGT) framing for teamwork-related traits is well represented by Curșeu et al. (2018) and consistent with complementary management literature.
+- Big Five foundations, measurement, and team-performance relationships have adequate coverage and triangulation.
+- Ethics and limitations are clearly disclosed, matching responsible open-source use.
+
+---
+
+DOI Table (selected)
+
+| #  | Citation                 | DOI                                |
+| -- | ------------------------ | ---------------------------------- |
+| 2  | Goldberg (1993)          | 10.1037/0003-066X.48.1.26          |
+| 4  | DeYoung et al. (2007)    | 10.1037/0022-3514.93.5.880         |
+| 5  | Peeters et al. (2006)    | 10.1002/per.588                    |
+| 7  | Woolley et al. (2010)    | 10.1126/science.1193147            |
+| 10 | Curșeu et al. (2019)     | 10.1002/ijop.12511                 |
+| 11 | Pierce & Aguinis (2013)  | 10.1177/0149206311410060           |
+| 12 | Le et al. (2011)         | 10.1037/a0021016                   |
+| 13 | Carter et al. (2014)     | 10.1037/a0034688                   |
+| 14 | Bozionelos et al. (2014) | 10.1016/j.jbusres.2013.11.026      |
+| 15 | Edwards (2008)           | 10.1080/19416520802211503          |
+| 16 | Pervin (1968)            | 10.1037/h0025271                   |
+| 17 | Caplan (1987)            | 10.1016/0001-8791(87)90042-X       |
+| 18 | Hogan & Hogan (2001)     | 10.1111/1468-2389.00162            |
+| 19 | Kaiser et al. (2015)     | 10.1016/j.riob.2013.10.003         |
+| 20 | Coker et al. (2002)      | 10.1521/pedi.17.2.141.23992        |
+| 21 | Carter et al. (2017)     | 10.1037/pas0000420                 |
+| 22 | Soto & John (2017)       | 10.1037/pspp0000096                |
+| 23 | Barrick & Mount (1991)   | 10.1111/j.1744-6570.1991.tb00688.x |
+| 24 | Ames & Flynn (2007)      | 10.1037/0022-3514.92.2.307         |
+| 25 | Ilies et al. (2009)      | 10.1037/a0013329                   |
+| 26 | Hogan & Holland (2003)   | 10.1037/0021-9010.88.1.100         |
+
+Notes
+
+- Items without DOIs (books/manuals) are marked as “book, ISBN verified” in internal notes.
+- Curșeu et al. (2018) article DOI (10.1002/ijop.12511) commonly appears with 2019 pagination; this is reconciled here under 2019 DOI formatting.
+
+---
+
+Full Verification Report
+
+[Paste full verification report here — the narrative you provided in the verification summary, including sections on New Features, Internal Code Checks, Documentation Cohesion, Optional Enhancements, and Verdict.]

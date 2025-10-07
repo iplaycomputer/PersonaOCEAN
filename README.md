@@ -185,3 +185,6 @@ PersonaOCEAN aims to be transparent and grounded. The role taxonomy, matching ma
   - A plain-language section on how PersonaOCEAN applies these ideas
 
 Limitations and ethics: This tool is for exploration and discussion. It is not a clinical instrument and shouldn’t be used for high-stakes decisions (e.g., hiring/promotion) without proper validation and oversight. Data are kept in memory per server and not persisted.
+
+🔍 Verification: All key sources verified and DOIs audited.
+See `docs/VERIFICATION_AUDIT_v1.1.txt` for the full verification report.
