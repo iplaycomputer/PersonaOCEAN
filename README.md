@@ -202,11 +202,11 @@ If you use PersonaOCEAN in research, teaching, or applied projects, please cite:
 
 **PersonaOCEAN Project (2025).**  
 *PersonaOCEAN: An Open-Source Psychometric Framework for Team Personality Analysis.*  
-Version 1.1.1 — Scientific Verification Audit Completion.  
+Version 1.1.2 — DOI Integration.  
 GitHub: [https://github.com/iplaycomputer/PersonaOCEAN](https://github.com/iplaycomputer/PersonaOCEAN)  
-DOI: 10.5281/zenodo.XXXXXXX
+DOI: 10.5281/zenodo.17289322
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17289322.svg)](https://doi.org/10.5281/zenodo.17289322)
 
 ---
 This citation ensures proper credit and reproducibility for derivative research.
