@@ -103,28 +103,28 @@ async def send_safe(interaction: discord.Interaction, content: str, *, ephemeral
 
 @bot.tree.command(name="ocean", description="Get your archetype from OCEAN scores (0–120 each)")
 @discord.app_commands.describe(
-    O="Openness (0–120)",
-    C="Conscientiousness (0–120)",
-    E="Extraversion (0–120)",
-    A="Agreeableness (0–120)",
-    N="Neuroticism (0–120)",
+    o="Openness (0–120)",
+    c="Conscientiousness (0–120)",
+    e="Extraversion (0–120)",
+    a="Agreeableness (0–120)",
+    n="Neuroticism (0–120)",
 )
 async def ocean_command(
     interaction: discord.Interaction,
-    O: int,
-    C: int,
-    E: int,
-    A: int,
-    N: int,
+    o: int,
+    c: int,
+    e: int,
+    a: int,
+    n: int,
 ):
-    role, desc, dept, _ = match_role(float(O), float(C), float(E), float(A), float(N))
+    role, desc, dept, _ = match_role(float(o), float(c), float(e), float(a), float(n))
     guild = interaction.guild
     guild_id = guild.id if guild else None
     if guild_id is not None:
         if guild_id not in companies:
             companies[guild_id] = {}
         companies[guild_id][interaction.user.id] = {
-            "traits": {"O": O, "C": C, "E": E, "A": A, "N": N},
+            "traits": {"O": o, "C": c, "E": e, "A": a, "N": n},
             "role": role,
             "dept": dept,
         }
