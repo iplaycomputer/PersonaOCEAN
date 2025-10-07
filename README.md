@@ -153,6 +153,12 @@ Developer notes:
 
 ## Contributing
 
+All contributions must go through pull requests targeting the `main` branch.
+Pull requests are automatically validated by the `Validate Roles` workflow.
+Please ensure `roles.yaml` passes validation before requesting review.
+
+Maintainer: [@iplaycomputer](https://github.com/iplaycomputer)
+
 Contributions are welcome! To keep things clean and consistent:
 
 1. Validate YAML before pushing:
