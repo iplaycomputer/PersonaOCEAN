@@ -3,6 +3,7 @@ import sys
 import yaml
 import discord
 from dotenv import load_dotenv
+from collections import Counter
 
 # --- Load roles ---
 def load_roles(path: str = "roles.yaml"):
@@ -83,12 +84,12 @@ bot = OceanBot(intents=intents)
 
 
 # --- Helper: safe send with basic rate-limit handling ---
-async def send_safe(interaction: discord.Interaction, content: str, *, ephemeral: bool = False):
+async def send_safe(interaction: discord.Interaction, content: str = None, *, embed: discord.Embed = None, ephemeral: bool = False):
     try:
         if interaction.response.is_done():
-            await interaction.followup.send(content, ephemeral=ephemeral)
+            await interaction.followup.send(content=content, embed=embed, ephemeral=ephemeral)
         else:
-            await interaction.response.send_message(content, ephemeral=ephemeral)
+            await interaction.response.send_message(content=content, embed=embed, ephemeral=ephemeral)
     except discord.HTTPException:
         # Simple backoff: inform user
         try:
@@ -150,17 +151,230 @@ async def company_command(interaction: discord.Interaction):
     lines = []
     for uid, data in registry.items():
         member = guild.get_member(uid)
-        display = member.display_name if member else f"User {uid}"
+        if member is None:
+            try:
+                member = await guild.fetch_member(uid)
+            except Exception:
+                member = None
+        display = member.display_name if member else f"Unknown User ({uid})"
         lines.append(f"- {display}: {data['role']} ({data['dept']})")
     await send_safe(interaction, f"🏢 **{guild.name} Company Members:**\n" + "\n".join(lines), ephemeral=False)
+
+
+@bot.tree.command(name="departments", description="List company members by department")
+async def departments_command(interaction: discord.Interaction):
+    guild = interaction.guild
+    guild_id = guild.id if guild else None
+    if guild_id is None:
+        await send_safe(interaction, "🏢 This command can only be used in a server.", ephemeral=True)
+        return
+
+    registry = companies.get(guild_id, {})
+    if not registry:
+        await send_safe(interaction, "🏢 No members registered yet in this company.", ephemeral=True)
+        return
+
+    # Group members by department
+    depts: dict[str, list[str]] = {}
+    for uid, data in registry.items():
+        dept = data["dept"]
+        member = guild.get_member(uid)
+        if member is None:
+            try:
+                member = await guild.fetch_member(uid)
+            except Exception:
+                member = None
+        name = member.display_name if member else f"Unknown User ({uid})"
+        depts.setdefault(dept, []).append(f"{name} — {data['role']}")
+
+    # Format
+    lines = [f"🏢 **{guild.name} — Departments:**"]
+    for dept, members in depts.items():
+        lines.append(f"\n**{dept}:**")
+        for m in members:
+            lines.append(f"- {m}")
+
+    await send_safe(interaction, "\n".join(lines), ephemeral=False)
+
+
+@bot.tree.command(name="profile", description="See your stored archetype and OCEAN scores")
+async def profile_command(interaction: discord.Interaction):
+    guild = interaction.guild
+    guild_id = guild.id if guild else None
+    if guild_id is None:
+        await send_safe(interaction, "🏢 This command can only be used in a server.", ephemeral=True)
+        return
+
+    registry = companies.get(guild_id, {})
+    user_data = registry.get(interaction.user.id)
+    if not user_data:
+        await send_safe(interaction, "You don't have a profile yet. Run `/ocean` first to get your archetype!", ephemeral=True)
+        return
+
+    t = user_data["traits"]
+    msg = (
+        f"🎭 **{interaction.user.display_name} — {user_data['role']}**\n"
+        f"🏢 Department: *{user_data['dept']}*\n"
+        f"O: {t['O']} | C: {t['C']} | E: {t['E']} | A: {t['A']} | N: {t['N']}"
+    )
+    await send_safe(interaction, msg, ephemeral=True)
+
+
+@bot.tree.command(name="summary", description="See a quick company-wide archetype summary")
+@discord.app_commands.describe(detailed="Show detailed OCEAN averages with bars")
+async def summary_command(interaction: discord.Interaction, detailed: bool = False):
+    guild = interaction.guild
+    guild_id = guild.id if guild else None
+    if guild_id is None:
+        await send_safe(interaction, "🏢 This command can only be used in a server.", ephemeral=True)
+        return
+
+    registry = companies.get(guild_id, {})
+    if not registry:
+        await send_safe(interaction, "🏢 No members registered yet in this company.", ephemeral=True)
+        return
+
+    # Count totals
+    total = len(registry)
+    dept_counts = Counter(data["dept"] for data in registry.values())
+    role_counts = Counter(data["role"] for data in registry.values())
+    top_roles = ", ".join(r for r, _ in role_counts.most_common(3))
+
+    # Format department counts
+    depts_text = "\n".join([f"- {dept}: {count}" for dept, count in dept_counts.items()])
+
+    # --- Compute average OCEAN for fun insight ---
+    trait_sums = {"O": 0, "C": 0, "E": 0, "A": 0, "N": 0}
+    for data in registry.values():
+        for t in trait_sums:
+            trait_sums[t] += data["traits"][t]
+    avg_traits = {t: trait_sums[t] / total for t in trait_sums}
+    norm = {t: (avg_traits[t] - 60) / 60 for t in avg_traits}
+
+    # Rank traits
+    sorted_traits = sorted(norm.items(), key=lambda kv: kv[1], reverse=True)
+    top_trait, top_val = sorted_traits[0]
+    bottom_trait, bottom_val = sorted_traits[-1]
+
+    def describe_trait(t):
+        return {
+            "O": "curious and imaginative 🎨",
+            "C": "organized and goal-driven 📋",
+            "E": "outgoing and energetic ⚡",
+            "A": "cooperative and kind 💛",
+            "N": "emotionally intense 🌊",
+        }[t]
+
+    # --- Fun vibe tiers ---
+    avg_spread = top_val - bottom_val
+    if avg_spread < 0.3:
+        vibe_line = "A harmonious blend ⚖️ — balanced across personalities."
+    elif top_val > 0.6 and bottom_val < -0.4:
+        vibe_line = f"Bold innovators 🚀 — strongly {describe_trait(top_trait)} and low in {bottom_trait}."
+    elif top_val > 0.5:
+        vibe_line = f"This company leans {describe_trait(top_trait)}."
+    elif bottom_val < -0.5:
+        vibe_line = f"Grounded and steady 🌱 — low in {bottom_trait}."
+    else:
+        vibe_line = "A well-rounded team with complementary strengths 🔄."
+
+    # Optional detailed OCEAN bar chart
+    def make_bar(value):
+        # map -1..+1 → 0..5 filled blocks
+        filled = int((value + 1) * 2.5)
+        return "█" * filled + "░" * (5 - filled)
+
+    if detailed:
+        bars = "\n".join([
+            f"{t}: {make_bar(norm[t])} ({norm[t]:+.2f})"
+            for t in ["O", "C", "E", "A", "N"]
+        ])
+        bars_section = f"\n\n**Average OCEAN Profile:**\n{bars}"
+    else:
+        bars_section = ""
+
+    # Optional compact text summary (goes below the bars)
+    if detailed:
+        sorted_avg = sorted(norm.items(), key=lambda kv: kv[1], reverse=True)
+        dominant, dom_val = sorted_avg[0]
+        weakest, weak_val = sorted_avg[-1]
+
+        def label_trait(t):
+            return {
+                "O": "Openness",
+                "C": "Conscientiousness",
+                "E": "Extraversion",
+                "A": "Agreeableness",
+                "N": "Neuroticism",
+            }[t]
+
+        balance_line = (
+            f"\n🧭 *Team OCEAN balance: {label_trait(dominant)} dominant, "
+            f"{label_trait(weakest)} low.*"
+        )
+    else:
+        balance_line = ""
+
+    if detailed:
+        # Professional embed for detailed view
+        embed = discord.Embed(
+            title=f"🏢 {guild.name} — Company Summary",
+            description=f"👥 **Members:** {total}\n✨ *{vibe_line}*",
+            color=discord.Color.blurple()
+        )
+        embed.add_field(name="Departments", value=depts_text or "—", inline=False)
+        embed.add_field(name="Top Roles", value=top_roles or "—", inline=False)
+
+        embed.add_field(
+            name="Average OCEAN Profile",
+            value="\n".join([
+                f"{t}: {make_bar(norm[t])} ({norm[t]:+.2f})"
+                for t in ["O", "C", "E", "A", "N"]
+            ]),
+            inline=False
+        )
+        
+        sorted_avg = sorted(norm.items(), key=lambda kv: kv[1], reverse=True)
+        dominant, dom_val = sorted_avg[0]
+        weakest, weak_val = sorted_avg[-1]
+
+        def label_trait(t):
+            return {
+                "O": "Openness",
+                "C": "Conscientiousness", 
+                "E": "Extraversion",
+                "A": "Agreeableness",
+                "N": "Neuroticism",
+            }[t]
+
+        embed.add_field(
+            name="Team Balance",
+            value=f"🧭 {label_trait(dominant)} dominant, {label_trait(weakest)} low.",
+            inline=False
+        )
+
+        await send_safe(interaction, embed=embed, ephemeral=False)
+    else:
+        # Simple text output for basic view
+        msg = (
+            f"🏢 **{guild.name} — Company Summary**\n"
+            f"👥 Members: {total}\n\n"
+            f"**Departments:**\n{depts_text}\n\n"
+            f"**Top Roles:** {top_roles or '—'}\n\n"
+            f"✨ *{vibe_line}*"
+        )
+        await send_safe(interaction, msg, ephemeral=False)
 
 
 @bot.tree.command(name="help", description="Show available commands")
 async def help_command(interaction: discord.Interaction):
     lines = [
         "Commands:",
-        "/ocean O C E A N — five numbers (0–120) to get your archetype and department.",
+        "/ocean o c e a n — five numbers (0–120) to get your archetype and department.",
+        "/profile — view your current archetype and OCEAN scores.",
         "/company — list members registered in this server (company).",
+        "/departments — list members grouped by department.",
+        "/summary — view company-wide department and role summary.",
         "/forget — delete your stored data from this server.",
     ]
     await send_safe(interaction, "\n".join(lines), ephemeral=True)
