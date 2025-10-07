@@ -1,6 +1,6 @@
 # PersonaOCEAN
 
-[![Validate Roles](https://github.com/YOUR_USERNAME/PersonaOCEAN/actions/workflows/validate.yml/badge.svg)](https://github.com/YOUR_USERNAME/PersonaOCEAN/actions/workflows/validate.yml)
+[![Validate Roles](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/validate.yml/badge.svg)](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/validate.yml)
 
 A simple Discord bot that maps Big Five (OCEAN) scores to clear archetype roles and departments. Fast, clean, and grounded in a transparent YAML taxonomy.
 
