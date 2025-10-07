@@ -171,3 +171,17 @@ pre-commit run --all-files
 1. CI checks — every push and PR automatically runs the Validate Roles workflow on GitHub Actions.
 
 For release notes and roadmap, see [CHANGELOG.md](CHANGELOG.md).
+
+## Scientific references
+
+PersonaOCEAN aims to be transparent and grounded. The role taxonomy, matching math, and team-level indicators are designed to be readable and auditable.
+
+- Read the full citation backbone and implementation notes: [docs/SCIENTIFIC_FRAMEWORK.txt](docs/SCIENTIFIC_FRAMEWORK.txt)
+- Highlights:
+  - Big Five foundations and measurement references
+  - Personality in teams and team performance meta-analyses
+  - Non-linear (inverted-U) effects and the Too-Much-of-a-Good-Thing (TMGT) literature
+  - Person–environment fit references and practical cautions
+  - A plain-language section on how PersonaOCEAN applies these ideas
+
+Limitations and ethics: This tool is for exploration and discussion. It is not a clinical instrument and shouldn’t be used for high-stakes decisions (e.g., hiring/promotion) without proper validation and oversight. Data are kept in memory per server and not persisted.

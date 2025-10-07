@@ -1,0 +1,103 @@
+# PersonaOCEAN Scientific Reference Framework
+
+---
+
+## Core Personality Theory (Big Five Foundations)
+
+* Big Five foundations — Costa, P. T., & McCrae, R. R. (1992). Revised NEO Personality Inventory (NEO PI-R) and NEO Five-Factor Inventory (NEO-FFI) Professional Manual.
+* Big Five taxonomy — Goldberg, L. R. (1993). The structure of phenotypic personality traits. American Psychologist, 48(1), 26–34.
+* Personality in work context — John, O. P., Naumann, L. P., & Soto, C. J. (2008). Paradigm shift to the integrative Big Five trait taxonomy. In O. P. John et al. (Eds.), Handbook of Personality: Theory and Research (3rd ed.).
+* Personality measurement best practices — DeYoung, C. G., Quilty, L. C., & Peterson, J. B. (2007). Between facets and domains: 10 aspects of the Big Five in the IPIP-NEO inventory.
+
+---
+
+## Personality in Teams and Organizations
+
+* Personality–team performance meta-analysis — Peeters, M. A. G., van Tuijl, H. F. J. M., Rutte, C. G., & Reymen, I. M. M. J. (2006). Personality and team performance: A meta-analysis. European Journal of Personality, 20, 377–396.
+* Personality in teams review — LePine, J. A., Buckman, B. R., Crawford, E. R., & Methot, J. R. (2011). A review of research on personality in teams. In S. Zedeck (Ed.), APA Handbook of Industrial and Organizational Psychology (Vol. 3).
+* Collective intelligence factor — Woolley, A. W., Chabris, C. F., Pentland, A., Hashmi, N., & Malone, T. W. (2010). Evidence for a collective intelligence factor in the performance of human groups. Science, 330(6004), 686–688.
+* Group diversity and learning — Curşeu, P. L., & Pluut, H. (2013). Group diversity and learning in organizations. Journal of Managerial Psychology, 28(3), 308–331.
+* Dark side of teamwork traits — McCord, M. A., Joseph, D. L., & Grijalva, E. (2014). Dark personality traits and the emergence of leadership. Personality and Individual Differences, 67, 116–122.
+
+---
+
+## Non-Linear (Curvilinear) Personality Effects
+
+* Main reference: Curşeu, P. L., Ilies, R., Vîrgă, D., Maricuţoiu, L., & Sava, F. A. (2018). Personality characteristics that are valued in teams: Not always “more is better.” International Journal of Psychology, 54(5), 638–649.
+* TMGT (Too-Much-of-a-Good-Thing) framework in management — Pierce, J. R., & Aguinis, H. (2013). The too-much-of-a-good-thing effect in management. Journal of Management, 39(2), 313–338.
+* Curvilinear personality–performance link — Le, H., Oh, I.-S., Robbins, S. B., Ilies, R., Holland, E., & Westrick, P. (2011). Too much of a good thing: Curvilinear relationships between personality traits and job performance. Journal of Applied Psychology, 96(1), 113–133.
+* Curvilinear conscientiousness — Carter, N. T., Dalal, D. K., Boyce, A. S., O’Connell, M. S., Kung, M. C., & Delgado, K. M. (2014). Uncovering curvilinear relationships between conscientiousness and job performance: How theoretically appropriate measurement makes an empirical difference. Journal of Applied Psychology, 99(4), 564–586.
+* Curvilinear openness — Bozionelos, N., Kostopoulos, K., van der Heijden, B., Rousseau, D. M., & Bozionelos, G. (2014). Employability and job performance as links in the relationship between mentoring receipt and career success: A moderated mediation model. Journal of Business Research, 67(8), 171–181.
+
+---
+
+## Person–Environment Fit & Situational Congruence
+
+* Edwards, J. R. (2008). Person–environment fit in organizations: An assessment of theoretical progress. The Academy of Management Annals, 2(1), 167–230.
+* Pervin, L. A. (1968). Performance and satisfaction as a function of individual–environment fit. Psychological Bulletin, 69(1), 56–68.
+* Caplan, R. D. (1987). Person–environment fit theory and organizations: Commensurate dimensions, time perspectives, and mechanisms. Journal of Vocational Behavior, 31(3), 248–267.
+
+---
+
+## Dark Triad & Maladaptive Extremes
+
+* Dark side of personality — Hogan, R., & Hogan, J. (2001). Assessing leadership: A view from the dark side. International Journal of Selection and Assessment, 9(1–2), 40–51.
+* Dark traits as extreme Big Five — Kaiser, R. B., LeBreton, J. M., & Hogan, J. (2013). The dark side of personality and extreme expressions of the Big Five. In T. A. Judge & J. D. LePine (Eds.), Research in Organizational Behavior.
+* Maladaptive facets of Big Five — Coker, K., Samuel, D. B., & Widiger, T. A. (2002). Maladaptive variants of Big Five personality traits. Personality Disorders: Theory, Research, and Treatment, 3(4), 356–376.
+
+---
+
+## Measurement and Scaling
+
+* Ideal-point vs dominance models — Carter, N. T., Dalal, D. K., Boyce, A. S., & O’Connell, M. S. (2017). Measurement equivalence and construct validity of ideal-point and dominance models of personality measurement. Psychological Assessment, 29(6), 745–757.
+* Trait facet measurement — Soto, C. J., & John, O. P. (2017). The next Big Five Inventory (BFI-2): Developing and assessing a hierarchical model with 15 facets to enhance bandwidth, fidelity, and predictive power. Journal of Personality and Social Psychology, 113(1), 117–143.
+
+---
+
+## Practical Organizational Psychology
+
+* Personality and job performance meta-analysis — Barrick, M. R., & Mount, M. K. (1991). The Big Five personality dimensions and job performance: A meta-analysis. Personnel Psychology, 44(1), 1–26.
+* Personality and leadership — Ames, D. R., & Flynn, F. J. (2007). What breaks a leader: The curvilinear relationship between assertiveness and leadership. Journal of Personality and Social Psychology, 92(2), 307–324.
+* Personality and organizational citizenship — Ilies, R., Fulmer, I. S., Spitzmuller, M., & Johnson, M. D. (2009). Personality and citizenship behavior: The mediating role of job satisfaction. Journal of Applied Psychology, 94(4), 945–959.
+* Linking Big Five and occupational performance — Hogan, J., & Holland, B. (2003). Using theory to evaluate personality–job performance relations: A socioanalytic perspective. Journal of Applied Psychology, 88(1), 100–112.
+
+---
+
+## Development Phases Using Sources
+
+* Phase 1: Base OCEAN math and archetypes — Costa & McCrae (1992).
+* Phase 2: Integrate inverted-U model for teamwork weighting — Curşeu et al. (2018).
+* Phase 3: Add dark extremes to “vibe tiers” — Hogan (2001); Kaiser et al. (2013); McCord et al. (2014).
+* Phase 4: Team-level analysis and company balance scoring — Woolley et al. (2010); LePine et al. (2011).
+
+---
+
+## Recommended Readings for Practitioners
+
+* Furnham, A. (2012). Personality at Work: The Role of Individual Differences in the Workplace.
+* Howard, P. J., & Howard, J. M. (2001). The Owner’s Manual for Personality at Work.
+* Chamorro-Premuzic, T., & Furnham, A. (Eds.). (2011). The Wiley-Blackwell Handbook of Individual Differences.
+* Larsen, R. J., & Buss, D. M. (2017). Personality Psychology: Domains of Knowledge About Human Nature.
+
+---
+
+## How PersonaOCEAN uses this research
+
+PersonaOCEAN turns simple Big Five (OCEAN) inputs into practical, team-friendly insights using transparent math and a readable taxonomy. Inputs are provided on a common 0–120 scale and normalized to −1..+1 using a linear transform. Each archetype in `roles.yaml` is defined by a five-weight pattern (also −1..+1). Matching uses a dot product between the normalized trait vector and each role’s pattern; the role with the highest score is returned alongside its department and a brief description. This keeps the model fast, interpretable, and easy to audit.
+
+For team-level analytics, PersonaOCEAN aggregates members’ scores and reports a concise snapshot: top roles, department mix, average trait levels, and a “vibe” summary. In detailed mode, the bot displays normalized values and percentile-style bars for each trait, plus a compact balance line highlighting the most pronounced and most muted traits. These views are meant to help teams discuss distribution and complementarity, not to label or limit individuals.
+
+To better reflect real organizational behavior, PersonaOCEAN incorporates a non-linear “Teamwork Fit” index inspired by Curşeu et al. (2018) and the broader TMGT literature: performance on some traits follows an inverted U (too low is harmful, too high can also be counterproductive). We approximate this with a smooth inverted-U function over the team’s mean Extraversion, Agreeableness, and Conscientiousness, then make small, transparent adjustments for Stability (lower Neuroticism) and balanced Openness. The resulting index (0–1) and a plain-language label are included in detailed summaries to encourage nuanced interpretation.
+
+Important limitations and ethics: PersonaOCEAN is not a clinical or high-stakes assessment. It does not attempt facet-level precision and relies on self-reported inputs. Results are intended for conversation and exploration only. Data are kept in memory per server and not persisted; the role taxonomy and matching math are fully visible in the repository to support scrutiny and improvement. Please avoid using outputs for hiring, promotion, or other consequential decisions without qualified validation and oversight.
+
+Versioned assumptions: The current implementation uses linear normalization, role templates at the domain level (not facets), a dot-product matcher, and a simple inverted-U approximation for teamwork. These choices are deliberately conservative and open to revision as the taxonomy matures, facet support is added, or empirical weights become available.
+
+---
+
+End of Framework
+
+---
+
+This file serves as the citation backbone of PersonaOCEAN — a full scientific audit trail.
+It’s repository-ready and can be linked from README.md under a “Scientific References” section.

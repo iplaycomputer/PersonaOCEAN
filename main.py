@@ -265,6 +265,43 @@ async def summary_command(interaction: discord.Interaction, detailed: bool = Fal
             "N": "emotionally intense 🌊",
         }[t]
 
+    # --- Teamwork Index (Curșeu et al. 2018) ---
+    def teamwork_value(trait_score):
+        """Inverted U-curve: moderate levels optimal for teamwork"""
+        x = trait_score / 120
+        # Peak at 0.5, drop symmetrically toward 0 and 1
+        return 1 - 4 * (x - 0.5)**2
+
+    # Compute teamwork index for E, A, C (inverted U) + stability/openness bonuses
+    e_avg = sum(data["traits"]["E"] for data in registry.values()) / total
+    a_avg = sum(data["traits"]["A"] for data in registry.values()) / total
+    c_avg = sum(data["traits"]["C"] for data in registry.values()) / total
+    o_avg = sum(data["traits"]["O"] for data in registry.values()) / total
+    n_avg = sum(data["traits"]["N"] for data in registry.values()) / total
+
+    teamwork_index = (
+        teamwork_value(e_avg) +
+        teamwork_value(a_avg) + 
+        teamwork_value(c_avg)
+    ) / 3
+
+    # Add emotional stability bonus (low N) and moderate O bonus
+    teamwork_index += 0.1 * ((120 - n_avg) / 120)  # Emotional stability boost
+    teamwork_index += 0.05 * (1 - abs((o_avg / 120) - 0.5) * 2)  # Mid-range O bonus
+    
+    # Clamp to [0, 1]
+    teamwork_index = max(0, min(1, teamwork_index))
+
+    # Teamwork interpretation
+    if teamwork_index >= 0.80:
+        teamwork_label = "Highly Synergistic 🤝"
+    elif teamwork_index >= 0.60:
+        teamwork_label = "Collaborative Potential 🌱"
+    elif teamwork_index >= 0.40:
+        teamwork_label = "Imbalanced ⚖️"
+    else:
+        teamwork_label = "Team Disruptor ⚡"
+
     # --- Fun vibe tiers ---
     avg_spread = top_val - bottom_val
     if avg_spread < 0.3:
@@ -350,6 +387,11 @@ async def summary_command(interaction: discord.Interaction, detailed: bool = Fal
         embed.add_field(
             name="Team Balance",
             value=f"🧭 {label_trait(dominant)} dominant, {label_trait(weakest)} low.",
+            inline=False
+        )
+        embed.add_field(
+            name="Teamwork Fit",
+            value=f"🤝 {teamwork_index:.2f} — {teamwork_label}",
             inline=False
         )
 
