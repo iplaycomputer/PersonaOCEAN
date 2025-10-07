@@ -210,3 +210,24 @@ DOI: 10.5281/zenodo.17289322
 
 ---
 This citation ensures proper credit and reproducibility for derivative research.
+
+### Copy-paste citation examples
+
+BibTeX
+
+```bibtex
+@software{PersonaOCEAN_zenodo_17289322,
+  author    = {PersonaOCEAN Project},
+  title     = {PersonaOCEAN: An Open-Source Psychometric Framework for Team Personality Analysis},
+  version   = {1.1.2},
+  date      = {2025-10-07},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.17289322},
+  url       = {https://doi.org/10.5281/zenodo.17289322},
+  license   = {MIT}
+}
+```
+
+APA (7th)
+
+PersonaOCEAN Project. (2025). PersonaOCEAN: An Open-Source Psychometric Framework for Team Personality Analysis (Version 1.1.2) [Computer software]. Zenodo. [https://doi.org/10.5281/zenodo.17289322](https://doi.org/10.5281/zenodo.17289322)
