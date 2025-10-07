@@ -1,0 +1,66 @@
+roles:
+  Visionary:
+    pattern: {O: 1.0, C: 0.2, E: 0.9, A: 0.1, N: -0.6}
+    dept: Strategy & Management
+    desc: >-
+      Inspires others through new ideas and exploration; thrives on vision and
+      direction-setting.
+  Architect:
+    pattern: {O: 0.8, C: 1.0, E: 0.2, A: 0.3, N: 0.0}
+    dept: Strategy & Management
+    desc: >-
+      Designs systems and strategies for long-term stability with structured
+      creativity.
+  Executor:
+    pattern: {O: 0.2, C: 1.0, E: 0.3, A: 0.4, N: -0.4}
+    dept: Operations & Logistics
+    desc: >-
+      Implements plans efficiently, ensuring accountability and dependable
+      outcomes.
+  Mediator:
+    pattern: {O: 0.3, C: 0.4, E: 0.5, A: 1.0, N: 0.3}
+    dept: Community & HR
+    desc: >-
+      Keeps the group cohesive, promotes fairness, and strengthens trust and
+      empathy.
+  Innovator:
+    pattern: {O: 1.0, C: -0.4, E: 0.8, A: 0.2, N: 0.0}
+    dept: Creative & R&D
+    desc: >-
+      Constantly generates fresh ideas, challenges norms, and sparks creative
+      change.
+  Analyst:
+    pattern: {O: 0.5, C: 0.9, E: 0.2, A: 0.3, N: 0.8}
+    dept: Quality & Risk
+    desc: >-
+      Anticipates risk, ensures quality, and brings attention to unseen details
+      and precision.
+  Communicator:
+    pattern: {O: 0.4, C: 0.4, E: 1.0, A: 0.9, N: 0.1}
+    dept: PR & Outreach
+    desc: >-
+      Connects people, spreads information clearly, and builds lasting
+      relationships.
+  Guardian:
+    pattern: {O: -0.3, C: 1.0, E: 0.3, A: 0.9, N: 0.2}
+    dept: Operations & Ethics
+    desc: >-
+      Upholds structure, ethics, and reliability; provides grounding stability
+      to the group.
+  Explorer:
+    pattern: {O: 1.0, C: 0.3, E: 0.9, A: 0.3, N: -0.5}
+    dept: Creative & Fieldwork
+    desc: >-
+      Adapts easily, thrives in uncertainty, and excels at experimentation and
+      discovery.
+  Strategist:
+    pattern: {O: 0.9, C: 0.9, E: 0.7, A: 0.5, N: 0.0}
+    dept: Strategy & Management
+    desc: >-
+      Synthesizes diverse perspectives into coherent, actionable long-term
+      plans.
+  Supporter:
+    pattern: {O: 0.3, C: 0.8, E: 0.4, A: 1.0, N: 0.2}
+    dept: Community & HR
+    desc: >-
+      Empathic and dependable contributor focused on helping others succeed.
