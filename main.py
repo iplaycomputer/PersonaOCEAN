@@ -395,6 +395,9 @@ async def summary_command(interaction: discord.Interaction, detailed: bool = Fal
             inline=False
         )
 
+        # Research note footer for transparency
+        embed.set_footer(text="Teamwork Fit uses moderate-trait weighting (Curșeu et al., 2018). See docs/SCIENTIFIC_FRAMEWORK.txt")
+
         await send_safe(interaction, embed=embed, ephemeral=False)
     else:
         # Simple text output for basic view
@@ -418,8 +421,24 @@ async def help_command(interaction: discord.Interaction):
         "/departments — list members grouped by department.",
         "/summary — view company-wide department and role summary.",
         "/forget — delete your stored data from this server.",
+        "/about — learn about the project and references.",
     ]
     await send_safe(interaction, "\n".join(lines), ephemeral=True)
+
+
+@bot.tree.command(name="about", description="About PersonaOCEAN and scientific references")
+async def about_command(interaction: discord.Interaction):
+    repo_url = "https://github.com/iplaycomputer/PersonaOCEAN"
+    docs_path = "docs/SCIENTIFIC_FRAMEWORK.txt"
+    msg = (
+        "PersonaOCEAN — a transparent OCEAN-to-archetype mapper with team insights.\n\n"
+        "Key links:\n"
+        f"• README: {repo_url}#readme\n"
+        f"• Scientific Framework: {repo_url}/blob/main/{docs_path}\n\n"
+        "Notes: Uses linear normalization, dot-product role matching, and a teamwork index inspired by Curșeu et al. (2018).\n"
+        "Ethics: For exploration only — not for high-stakes decisions."
+    )
+    await send_safe(interaction, msg, ephemeral=True)
 
 
 @bot.tree.command(name="forget", description="Delete your stored OCEAN data from this server")
