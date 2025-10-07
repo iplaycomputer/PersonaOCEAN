@@ -47,6 +47,9 @@ Notes
 
 Full Verification Report
 
+Purpose
+This verification was conducted to ensure reproducibility and transparency of all cited sources in the PersonaOCEAN framework.
+
 All forty-one citations listed in the PersonaOCEAN Scientific Framework were independently verified using publicly available academic databases (APA PsycArticles, ScienceDirect, Wiley Online Library, Taylor & Francis, and Google Scholar).
 
 Verification process
