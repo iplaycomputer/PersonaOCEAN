@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.1.0 – Curșeu Integration & Transparency Update (2025-10-07)
+
+### Added
+
+- Teamwork Fit index in `/summary detailed:true`, inspired by Curșeu et al. (2018) inverted-U moderation of teamwork-relevant traits (E, A, C) with small adjustments for stability and balanced openness.
+- Scientific Framework document with complete citation backbone and a plain-language explainer: `docs/SCIENTIFIC_FRAMEWORK.txt`.
+- New `/about` command linking to the README and Scientific Framework; includes a short ethics note.
+- Research attribution footer in the detailed summary embed.
+
+### Changed
+
+- README now includes a “Scientific references” section linking to the framework and clarifying limitations/ethics.
+
+### Notes
+
+- No breaking changes. Slash-command sync is instant when `DEV_GUILD_ID` is set; global sync can take time to propagate.
+
 ## v1.0.0 – Initial public release
 
 - Added /ocean, /company, /help, /forget commands
