@@ -188,3 +188,18 @@ Limitations and ethics: This tool is for exploration and discussion. It is not a
 
 🔍 Verification: All key sources verified and DOIs audited.
 See `docs/VERIFICATION_AUDIT_v1.1.txt` for the full verification report.
+
+## 📖 Citation
+
+If you use PersonaOCEAN in research, teaching, or applied projects, please cite:
+
+**PersonaOCEAN Project (2025).**  
+*PersonaOCEAN: An Open-Source Psychometric Framework for Team Personality Analysis.*  
+Version 1.1.1 — Scientific Verification Audit Completion.  
+GitHub: [https://github.com/iplaycomputer/PersonaOCEAN](https://github.com/iplaycomputer/PersonaOCEAN)  
+DOI: 10.5281/zenodo.XXXXXXX
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+
+---
+This citation ensures proper credit and reproducibility for derivative research.
