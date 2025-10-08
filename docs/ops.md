@@ -32,8 +32,8 @@ The log level is controlled by the environment variable `LOG_LEVEL` (default: IN
 - Summary of error counts by event:
   jq -r 'select(.level=="ERROR") | .event' | sort | uniq -c | sort -nr
 
-- Inspect top 10 slowest cmd_summary events (most recent logs first):
-  tac bot.log | jq 'select(.event=="cmd_summary" and .duration_ms!=null) | [.duration_ms,.ts,.user_id] | @tsv' | head -n 2000 | sort -nr | head -n 10
+- Inspect top 10 slowest cmd_summary events:
+  tac bot.log | jq 'select(.event=="cmd_summary" and .duration_ms!=null) | [.duration_ms,.ts,.user_id] | @tsv' | sort -nr | head -n 10
 
 Note: `tac` may not be available on macOS by default. You can use `tail -r` instead.
 
@@ -48,7 +48,7 @@ Assuming logs are in `bot.log`.
   Get-Content bot.log | ForEach-Object { $_ | ConvertFrom-Json } | Where-Object { $_.event -eq 'cmd_error' }
 
 - Only from a specific guild:
-  $G='123456789012345678'; Get-Content bot.log | % { $_ | ConvertFrom-Json } | ? { $_.guild_id -eq $G }
+  $GuildId='123456789012345678'; Get-Content bot.log | % { $_ | ConvertFrom-Json } | ? { $_.guild_id -eq $GuildId }
 
 - Slow commands (> 1500 ms):
   Get-Content bot.log | % { $_ | ConvertFrom-Json } | ? { $_.duration_ms -gt 1500 } | Select-Object ts, event, cmd, duration_ms, guild_id
