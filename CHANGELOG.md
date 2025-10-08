@@ -1,5 +1,23 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+## [1.2.0] — 2025-10-08
+
+### Added
+
+- Minimal Dockerfile and docker-compose setup
+- Structured JSON logging with log levels
+- Graceful shutdown and HEALTHCHECK
+- Ops docs: Docker log filters (jq, PowerShell) and troubleshooting tips
+
+### Improved
+
+- Markdown lint and formatting in documentation
+
+For prior verification work and scientific framework details, see docs/VERIFICATION_AUDIT_v1.1.txt and docs/SCIENTIFIC_FRAMEWORK.txt.
+# Changelog
+
 ## v1.1.0 – Curșeu Integration & Transparency Update (2025-10-07)
 
 ### Added

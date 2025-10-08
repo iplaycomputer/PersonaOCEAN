@@ -1,5 +1,9 @@
 # PersonaOCEAN
 
+[![Release](https://img.shields.io/github/v/release/iplaycomputer/PersonaOCEAN)](https://github.com/iplaycomputer/PersonaOCEAN/releases)
+[![Docker](https://img.shields.io/badge/Docker-ready-blue)](https://www.docker.com/)
+[![License](https://img.shields.io/github/license/iplaycomputer/PersonaOCEAN)](LICENSE)
+
 [![Validate Roles](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/validate.yml/badge.svg)](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/validate.yml)
 [![Dependabot Status](https://img.shields.io/badge/Dependabot-enabled-brightgreen?logo=dependabot)](https://docs.github.com/code-security/dependabot)
 
@@ -255,6 +259,7 @@ PersonaOCEAN emits structured, JSON-like logs to stdout so you can trace behavio
 Tip: Pipe logs to a file or collector (e.g., `jq`/ELK) to filter by `event` or investigate latency (`duration_ms`).
 
 For a deeper operations playbook (jq filters, Windows PowerShell equivalents, alert ideas), see: [docs/ops.md](docs/ops.md).
+
 ### Run with Docker (optional)
 
 You can run PersonaOCEAN as a container. Structured logs are printed to stdout.
