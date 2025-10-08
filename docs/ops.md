@@ -79,6 +79,34 @@ Useful alert ideas:
 
 ## Environment variables
 
+### Docker logs + jq (quick triage)
+
+If running via Docker/Compose, you can filter logs similarly:
+
+Linux/macOS:
+
+```bash
+docker compose logs -f bot | jq 'select(.level=="ERROR")'
+```
+
+> Note: jq filters assume each log line is valid JSON (as emitted by PersonaOCEAN). Non-JSON lines (from the platform/engine) may be interleaved by some runtimes and will be skipped by jq.
+
+Windows PowerShell:
+
+```powershell
+docker compose logs -f bot | ForEach-Object {
+  try { $_ | ConvertFrom-Json } catch { $null }
+} | Where-Object { $_ -and $_.level -eq 'ERROR' }
+```
+
+> Note: If any log lines aren't valid JSON (e.g., platform metadata or partial lines), the try/catch will skip them.
+
+### HEALTHCHECK
+
+- The container writes a heartbeat timestamp to `/tmp/heartbeat` every ~30s.
+- Docker marks the container healthy if the file is fresh (≈ under 1 minute old).
+- If the container becomes `unhealthy`, check for recent `cmd_error`, `send_error`, or `defer_failed` events.
+
 - LOG_LEVEL: DEBUG/INFO/WARN/ERROR (default: INFO)
 - DISCORD_TOKEN: Bot token
 - (optional) GUILD_ID_ALLOWLIST: comma-separated list of guild IDs to allow (for staged rollouts)
