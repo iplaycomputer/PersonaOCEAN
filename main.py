@@ -182,6 +182,17 @@ async def ocean_command(
     a: int,
     n: int,
 ):
+    # Validate input ranges
+    scores = {"O": o, "C": c, "E": e, "A": a, "N": n}
+    invalid = [trait for trait, score in scores.items() if not (0 <= score <= 120)]
+    if invalid:
+        await send_safe(
+            interaction,
+            f"⚠️ Invalid scores: {', '.join(invalid)}. Scores must be between 0 and 120.",
+            ephemeral=True,
+        )
+        return
+
     role, desc, dept, _ = match_role(float(o), float(c), float(e), float(a), float(n))
     guild = interaction.guild
     guild_id = guild.id if guild else None
@@ -550,11 +561,24 @@ async def on_app_command_error(interaction: discord.Interaction, error: Exceptio
 
 
 def run_discord():
+    # Prefer env var, then file path (for Docker secrets), then legacy var
     token = os.getenv("DISCORD_BOT_TOKEN") or os.getenv("YOUR_DISCORD_BOT_TOKEN")
     if not token:
+        token_file = os.getenv("DISCORD_BOT_TOKEN_FILE") or "/run/secrets/discord_bot_token"
+        try:
+            if os.path.isfile(token_file):
+                with open(token_file, "r", encoding="utf-8") as f:
+                    token = f.read().strip()
+        except Exception:
+            token = None
+    if not token:
         print(
-            "❌ Missing DISCORD_BOT_TOKEN. Set it in your environment or in a .env file.\n"
-            "Example .env line:\nDISCORD_BOT_TOKEN=YOUR_DISCORD_BOT_TOKEN\n\n"
+            "❌ Missing Discord token. Provide one of the following:"\
+            "\n  - Set DISCORD_BOT_TOKEN in your environment or .env file"\
+            "\n  - Or set DISCORD_BOT_TOKEN_FILE to a file containing the token"\
+            "\n  - Or provide a Docker secret at /run/secrets/discord_bot_token"\
+            "\n\nExample .env line:\nDISCORD_BOT_TOKEN=YOUR_DISCORD_BOT_TOKEN\n"\
+            "# Or reference a file:\n# DISCORD_BOT_TOKEN_FILE=/run/secrets/discord_bot_token\n\n"\
             "Tip: For a quick local test without Discord, run: python main.py 105 90 95 83 60"
         )
         sys.exit(1)
