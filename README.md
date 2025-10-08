@@ -4,7 +4,7 @@ A simple Discord bot that maps Big Five (OCEAN) scores to clear archetype roles 
 
 ## Invite and use (for community admins)
 
-Ask the owner for the bot’s invite link, add it to your server, then use slash commands:
+[Invite PersonaOCEAN to your server](https://discord.com/oauth2/authorize?client_id=1425093192096678060&permissions=3072&scope=bot%20applications.commands)
 
 ```text
 /ocean O C E A N
