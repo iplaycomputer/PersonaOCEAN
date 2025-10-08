@@ -93,10 +93,6 @@ Notes:
 
 More docs: See `docs/OPS-CHEATSHEET.md` and `docs/ops.md`.
 
-<!-- Contributing details moved to bottom minimal section -->
-
-<!-- Duplicate Quick Start removed; see Quick Start above -->
-
 ## Contributing
 
 PRs to `main` welcome. Before you push, run `python validate_roles.py`.

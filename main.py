@@ -191,6 +191,28 @@ async def ocean_command(
             f"⚠️ Invalid scores: {', '.join(invalid)}. Scores must be between 0 and 120.",
             ephemeral=True,
         )
+        log_event(
+            "invalid_input",
+            level="WARN",
+            guild_id=getattr(interaction.guild, "id", None),
+            user_id=getattr(interaction.user, "id", None),
+            invalid_traits=invalid,
+        )
+        return
+
+    # Friendly guard for the extreme "all 120s" case
+    if all(v == 120 for v in scores.values()):
+        await send_safe(
+            interaction,
+            "🤔 All 120s? TOO STRONG, BUDDY! Please enter real scores between 0 and 120 from a Big Five test.",
+            ephemeral=True,
+        )
+        log_event(
+            "extreme_input",
+            level="WARN",
+            guild_id=getattr(interaction.guild, "id", None),
+            user_id=getattr(interaction.user, "id", None),
+        )
         return
 
     role, desc, dept, _ = match_role(float(o), float(c), float(e), float(a), float(n))
