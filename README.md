@@ -1,14 +1,6 @@
 # PersonaOCEAN
 
-[![Release](https://img.shields.io/github/v/release/iplaycomputer/PersonaOCEAN)](https://github.com/iplaycomputer/PersonaOCEAN/releases)
-[![Docker](https://img.shields.io/badge/Docker-ready-blue)](https://www.docker.com/)
-[![License](https://img.shields.io/github/license/iplaycomputer/PersonaOCEAN)](LICENSE)
-[![Docker Image Version](https://ghcr-badge.egpl.dev/iplaycomputer/personaocean/latest_tag?color=blue)](https://github.com/iplaycomputer/PersonaOCEAN/pkgs/container/personaocean)
-
-[![Validate Roles](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/validate.yml/badge.svg)](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/validate.yml)
-[![Dependabot Status](https://img.shields.io/badge/Dependabot-enabled-brightgreen?logo=dependabot)](https://docs.github.com/code-security/dependabot)
-
-A simple Discord bot that maps Big Five (OCEAN) scores to clear archetype roles and departments. Fast, clean, and grounded in a transparent YAML taxonomy.
+A simple Discord bot that maps Big Five (OCEAN) scores to clear archetype roles and departments.
 
 ## Invite and use (for community admins)
 
@@ -75,64 +67,12 @@ Notes for admins:
 
 ---
 
-## For developers and self-hosters
+## Quick Start
 
-Clone this repo if you want to host your own instance. Otherwise, skip this section.
-
-### What’s included
-
-- `roles.yaml` — Archetypes with O/C/E/A/N patterns, department, and description
-- `main.py` — Discord bot (slash commands) and CLI fallback for quick local testing
-- `requirements.txt` — Minimal dependencies
-- `.gitignore` — Keeps virtualenv and secrets out of git
-- `.env` (local) — Your bot token, auto-loaded (not committed)
-- `validate_roles.py` — Validate roles.yaml structure and weight ranges before committing
-
-### Repo file structure
-
-```text
-persona-ocean/
-├── main.py
-├── roles.yaml
-├── requirements.txt
-├── .env                 # your token (ignored by git)
-└── .gitignore
-```
-
-### Self-host quick start (Windows PowerShell)
-
-Prereqs: Python 3.9+ required and a bot token from [discord.com/developers](https://discord.com/developers)
-
-Create a virtual environment and install dependencies:
+Run the prebuilt image from GHCR (Docker or Docker Desktop):
 
 ```powershell
-py -3 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
-
-Add your token:
-
-```powershell
-$env:DISCORD_BOT_TOKEN = "YOUR_DISCORD_BOT_TOKEN"
-```
-
-Or create `.env` (auto-loaded) — see `.env.example` for all available variables:
-
-```dotenv
-DISCORD_BOT_TOKEN=YOUR_DISCORD_BOT_TOKEN
-```
-
-Run the bot:
-
-```powershell
-python .\main.py
-```
-
-Local CLI test (no Discord):
-
-```powershell
-python .\main.py 105 90 95 83 60
+docker run --rm -e DISCORD_BOT_TOKEN=YOUR_TOKEN ghcr.io/iplaycomputer/personaocean:latest
 ```
 
 ### Invite URL (owner-only)
@@ -151,166 +91,16 @@ Notes:
 - permissions=3072 grants Send Messages (2048) + Read Message History (1024). Adjust if needed.
 - No Message Content intent required for slash commands.
 
-Developer notes:
+More docs: See `docs/OPS-CHEATSHEET.md` and `docs/ops.md`.
 
-- Optional fast sync for testing: set DEV_GUILD_ID in your environment to sync commands to one server instantly.
-- Validate YAML before deploy: run `python validate_roles.py` to check structure and weight ranges (see [`validate_roles.py`](validate_roles.py)).
+<!-- Contributing details moved to bottom minimal section -->
+
+<!-- Duplicate Quick Start removed; see Quick Start above -->
 
 ## Contributing
 
-All contributions must go through pull requests targeting the `main` branch.
-Pull requests are automatically validated by the `Validate Roles` workflow.
-Please ensure `roles.yaml` passes validation before requesting review.
+PRs to `main` welcome. Before you push, run `python validate_roles.py`.
+Optional: set `DEV_GUILD_ID` to sync slash commands to one guild for faster testing.
 
-### 🧩 Contributors quickstart
-
-Want to help improve PersonaOCEAN?
-
-1. Fork the repo and clone your fork.
-1. Copy `.env.example` → `.env` and fill in your test token.
-1. Install pre-commit hooks to auto-fix formatting and YAML style:
-
-  ```bash
-  pip install pre-commit
-  pre-commit install
-  ```
-
-1. Run local validation before you push:
-
-  ```bash
-  python validate_roles.py
-  ```
-
-Push your branch and open a pull request — the CI will run `Validate Roles` automatically.
-
-Maintainer: [@iplaycomputer](https://github.com/iplaycomputer)
-
-Contributions are welcome! To keep things clean and consistent:
-
-1. Validate YAML before pushing:
-
-```bash
-python validate_roles.py
-```
-
-1. Run pre-commit locally to auto-fix formatting:
-
-```bash
-pip install pre-commit
-pre-commit install
-pre-commit run --all-files
-```
-
-1. CI checks — every push and PR automatically runs the Validate Roles workflow on GitHub Actions.
-
-For release notes and roadmap, see [CHANGELOG.md](CHANGELOG.md).
-
-## Scientific references
-
-PersonaOCEAN aims to be transparent and grounded. The role taxonomy, matching math, and team-level indicators are designed to be readable and auditable.
-
-- Read the full citation backbone and implementation notes: [docs/SCIENTIFIC_FRAMEWORK.txt](docs/SCIENTIFIC_FRAMEWORK.txt)
-- Highlights:
-  - Big Five foundations and measurement references
-  - Personality in teams and team performance meta-analyses
-  - Non-linear (inverted-U) effects and the Too-Much-of-a-Good-Thing (TMGT) literature
-  - Person–environment fit references and practical cautions
-  - A plain-language section on how PersonaOCEAN applies these ideas
-
-Limitations and ethics: This tool is for exploration and discussion. It is not a clinical instrument and shouldn’t be used for high-stakes decisions (e.g., hiring/promotion) without proper validation and oversight. Data are kept in memory per server and not persisted.
-
-🔍 Verification: All key sources verified and DOIs audited.
-See `docs/VERIFICATION_AUDIT_v1.1.txt` for the full verification report.
-
-## 📖 Citation
-
-If you use PersonaOCEAN in research, teaching, or applied projects, please cite:
-
-**PersonaOCEAN Project (2025).**  
-*PersonaOCEAN: An Open-Source Psychometric Framework for Team Personality Analysis.*  
-Version 1.1.2 — DOI Integration.  
-GitHub: [https://github.com/iplaycomputer/PersonaOCEAN](https://github.com/iplaycomputer/PersonaOCEAN)  
-DOI: 10.5281/zenodo.17289322
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17289322.svg)](https://doi.org/10.5281/zenodo.17289322)
-
----
-This citation ensures proper credit and reproducibility for derivative research.
-
-### Copy-paste citation examples
-
-BibTeX
-
-```bibtex
-@software{PersonaOCEAN_zenodo_17289322,
-  author    = {PersonaOCEAN Project},
-  title     = {PersonaOCEAN: An Open-Source Psychometric Framework for Team Personality Analysis},
-  version   = {1.1.2},
-  date      = {2025-10-07},
-  publisher = {Zenodo},
-  doi       = {10.5281/zenodo.17289322},
-  url       = {https://doi.org/10.5281/zenodo.17289322},
-  license   = {MIT}
-}
-```
-
-APA (7th)
-
-PersonaOCEAN Project. (2025). PersonaOCEAN: An Open-Source Psychometric Framework for Team Personality Analysis (Version 1.1.2) [Computer software]. Zenodo. [https://doi.org/10.5281/zenodo.17289322](https://doi.org/10.5281/zenodo.17289322)
-
----
-
-## Operations (logging)
-
-PersonaOCEAN emits structured, JSON-like logs to stdout so you can trace behavior during load tests and production.
-
-- Key fields:
-  - `event`: Short event name (e.g., `interaction_deferred`, `cmd_summary`, `cmd_error`).
-  - `guild_id`, `user_id`: Context for where/who triggered the action.
-  - Command metrics: `members`, `teamwork_index`, `duration_ms` (elapsed milliseconds), etc.
-  - `traceback`: Present only on `cmd_error` for quick diagnostics.
-
-- Verbosity: Set `LOG_LEVEL=DEBUG` (or `INFO`/`WARNING`/`ERROR`) in your environment to adjust noise.
-
-- Example log line:
-
-```json
-{"ts":"2025-10-07T17:24:10Z","event":"cmd_summary","guild_id":1234567890,"user_id":111222333,"detailed":true,"members":7,"teamwork_index":0.892,"duration_ms":214}
-```
-
-Tip: Pipe logs to a file or collector (e.g., `jq`/ELK) to filter by `event` or investigate latency (`duration_ms`).
-
-For a deeper operations playbook (jq filters, Windows PowerShell equivalents, alert ideas), see: [docs/ops.md](docs/ops.md).
-
-### Quick Start (Docker)
-
-Run the prebuilt image from GHCR (single-host Docker or Docker Desktop):
-
-```powershell
-docker run --rm -e DISCORD_BOT_TOKEN=YOUR_TOKEN ghcr.io/iplaycomputer/personaocean:latest
-```
-
-Optional environment:
-
-- LOG_LEVEL=INFO | DEBUG | WARN | ERROR (default: INFO)
-
-Compose (optional):
-
-```yaml
-services:
-  bot:
-    image: ghcr.io/iplaycomputer/personaocean:latest
-    environment:
-      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
-      - LOG_LEVEL=${LOG_LEVEL:-INFO}
-```
-
-## Releases pipeline
-
-[![Release + Docker Publish](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/release-and-publish.yml/badge.svg)](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/release-and-publish.yml)
-
-Push a tag like `v1.2.2` and CI will:
-
-- Build and push Docker images to GHCR (`latest` and the version tag)
-- Publish a GitHub Release using draft notes (or generated notes if none)
+More docs: see `docs/OPS-CHEATSHEET.md` and `docs/ops.md`.
 
