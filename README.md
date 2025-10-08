@@ -291,3 +291,38 @@ Pull the prebuilt image from GHCR:
 docker pull ghcr.io/iplaycomputer/personaocean:latest
 ```
 
+### Running safely (tokens)
+
+Local development (recommended): create a `.env` file next to `docker-compose.yml`:
+
+```dotenv
+DISCORD_BOT_TOKEN=YOUR_REAL_TOKEN
+LOG_LEVEL=INFO
+```
+
+Then run:
+
+```powershell
+docker compose up
+```
+
+Production/secrets: point to a file-backed secret (e.g., Docker Swarm/Kubernetes):
+
+```yaml
+services:
+  bot:
+    environment:
+      - DISCORD_BOT_TOKEN_FILE=/run/secrets/discord_bot_token
+    # secrets:
+    #   - discord_bot_token
+# secrets:
+#   discord_bot_token:
+#     external: true
+```
+
+Create the secret (example):
+
+```bash
+echo "YOUR_TOKEN" | docker secret create discord_bot_token -
+```
+
