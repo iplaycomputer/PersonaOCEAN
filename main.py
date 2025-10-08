@@ -94,7 +94,6 @@ async def send_safe(interaction: discord.Interaction, content: str = None, *, em
         else:
             await interaction.response.send_message(content=content, embed=embed, ephemeral=ephemeral)
     except (discord.HTTPException, discord.NotFound) as e:
-        # Simple backoff: inform user
         try:
             msg = "⚠️ Rate limited, please try again."
             if interaction.response.is_done():
@@ -103,27 +102,40 @@ async def send_safe(interaction: discord.Interaction, content: str = None, *, em
                 await interaction.response.send_message(msg, ephemeral=True)
         except Exception:
             pass
-        log_event("send_error", error=str(e), guild_id=getattr(interaction.guild, "id", None), user_id=getattr(interaction.user, "id", None))
+        log_event(
+            "send_error",
+            level="WARN",
+            error=str(e),
+            guild_id=getattr(interaction.guild, "id", None),
+            user_id=getattr(interaction.user, "id", None),
+            channel_id=getattr(getattr(interaction, "channel", None), "id", None),
+        )
 
 
 # --- Logging utilities ---
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+LEVEL_ORDER = {"DEBUG": 10, "INFO": 20, "WARN": 30, "WARNING": 30, "ERROR": 40}
+
+def _norm_level(level: str) -> str:
+    lvl = (level or "INFO").upper()
+    return "WARN" if lvl == "WARNING" else lvl
 
 def _level_ok(level: str) -> bool:
-    order = {"DEBUG": 10, "INFO": 20, "WARNING": 30, "ERROR": 40}
-    return order.get(level, 20) >= order.get(LOG_LEVEL, 20)
+    return LEVEL_ORDER.get(_norm_level(level), 20) >= LEVEL_ORDER.get(_norm_level(LOG_LEVEL), 20)
 
-def log_event(event: str, **kwargs):
-    """Emit a structured log line as JSON to stdout."""
+def log_event(event: str, *, level: str = "INFO", **kwargs):
+    # Honor LOG_LEVEL and include a level field in the record
+    if not _level_ok(level):
+        return
     record = {
         "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "event": event,
+        "level": _norm_level(level),
         **kwargs,
     }
     try:
         print(json.dumps(record, ensure_ascii=False))
     except Exception:
-        # Fallback to simple print if JSON encoding fails
         print(f"{record}")
 
 
@@ -136,13 +148,22 @@ async def maybe_defer(interaction: discord.Interaction, *, ephemeral: bool = Fal
             await interaction.response.defer(thinking=True, ephemeral=ephemeral)
             log_event(
                 "interaction_deferred",
+                level="INFO",
                 guild_id=getattr(interaction.guild, "id", None),
                 user_id=getattr(interaction.user, "id", None),
+                channel_id=getattr(getattr(interaction, "channel", None), "id", None),
                 cmd=getattr(interaction.command, "name", None),
             )
     except discord.HTTPException as e:
-        # If already acknowledged or token expired, just log
-        log_event("defer_failed", error=str(e), cmd=getattr(interaction.command, "name", None))
+        log_event(
+            "defer_failed",
+            level="WARN",
+            error=str(e),
+            cmd=getattr(interaction.command, "name", None),
+            guild_id=getattr(interaction.guild, "id", None),
+            user_id=getattr(interaction.user, "id", None),
+            channel_id=getattr(getattr(interaction, "channel", None), "id", None),
+        )
 
 
 @bot.tree.command(name="ocean", description="Get your archetype from OCEAN scores (0–120 each)")
@@ -508,7 +529,6 @@ async def forget_command(interaction: discord.Interaction):
 
 @bot.tree.error
 async def on_app_command_error(interaction: discord.Interaction, error: Exception):
-    # Basic global error handler for application commands with structured logging
     try:
         msg = "⚠️ Something went wrong. Please try again."
         if interaction.response.is_done():
@@ -517,11 +537,12 @@ async def on_app_command_error(interaction: discord.Interaction, error: Exceptio
             await interaction.response.send_message(msg, ephemeral=True)
     except Exception:
         pass
-    # Log rich context for operator visibility
     log_event(
         "cmd_error",
+        level="ERROR",
         guild_id=getattr(interaction.guild, "id", None),
         user_id=getattr(interaction.user, "id", None),
+        channel_id=getattr(getattr(interaction, "channel", None), "id", None),
         cmd=getattr(interaction.command, "name", None),
         error=str(error),
         traceback="\n".join(traceback.format_exception(type(error), error, error.__traceback__)),
