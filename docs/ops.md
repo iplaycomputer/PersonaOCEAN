@@ -79,6 +79,24 @@ Useful alert ideas:
 
 ## Environment variables
 
+### Docker logs + jq (quick triage)
+
+If running via Docker/Compose, you can filter logs similarly:
+
+Linux/macOS:
+
+  docker compose logs -f bot | jq 'select(.level=="ERROR")'
+
+Windows PowerShell:
+
+  docker compose logs -f bot | ForEach-Object { $_ | ConvertFrom-Json } | Where-Object { $_.level -eq 'ERROR' }
+
+### HEALTHCHECK
+
+- The container writes a heartbeat timestamp to `/tmp/heartbeat` every ~30s.
+- Docker marks the container healthy if the file is fresh (≈ under 1 minute old).
+- If the container becomes `unhealthy`, check for recent `cmd_error`, `send_error`, or `defer_failed` events.
+
 - LOG_LEVEL: DEBUG/INFO/WARN/ERROR (default: INFO)
 - DISCORD_TOKEN: Bot token
 - (optional) GUILD_ID_ALLOWLIST: comma-separated list of guild IDs to allow (for staged rollouts)
