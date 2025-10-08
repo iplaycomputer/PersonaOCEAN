@@ -1,0 +1,15 @@
+# Ignore files we don't need in the image
+.git
+.venv
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.env
+.env.*
+node_modules/
+.build/
+dist/
+.vscode/
+.DS_Store
