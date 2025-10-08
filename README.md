@@ -231,3 +231,27 @@ BibTeX
 APA (7th)
 
 PersonaOCEAN Project. (2025). PersonaOCEAN: An Open-Source Psychometric Framework for Team Personality Analysis (Version 1.1.2) [Computer software]. Zenodo. [https://doi.org/10.5281/zenodo.17289322](https://doi.org/10.5281/zenodo.17289322)
+
+---
+
+## Operations (logging)
+
+PersonaOCEAN emits structured, JSON-like logs to stdout so you can trace behavior during load tests and production.
+
+- Key fields:
+  - `event`: Short event name (e.g., `interaction_deferred`, `cmd_summary`, `cmd_error`).
+  - `guild_id`, `user_id`: Context for where/who triggered the action.
+  - Command metrics: `members`, `teamwork_index`, `duration_ms` (elapsed milliseconds), etc.
+  - `traceback`: Present only on `cmd_error` for quick diagnostics.
+
+- Verbosity: Set `LOG_LEVEL=DEBUG` (or `INFO`/`WARNING`/`ERROR`) in your environment to adjust noise.
+
+- Example log line:
+
+```json
+{"ts":"2025-10-07T17:24:10Z","event":"cmd_summary","guild_id":1234567890,"user_id":111222333,"detailed":true,"members":7,"teamwork_index":0.892,"duration_ms":214}
+```
+
+Tip: Pipe logs to a file or collector (e.g., `jq`/ELK) to filter by `event` or investigate latency (`duration_ms`).
+
+For a deeper operations playbook (jq filters, Windows PowerShell equivalents, alert ideas), see: [docs/ops.md](docs/ops.md).
