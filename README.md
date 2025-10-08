@@ -3,6 +3,7 @@
 [![Release](https://img.shields.io/github/v/release/iplaycomputer/PersonaOCEAN)](https://github.com/iplaycomputer/PersonaOCEAN/releases)
 [![Docker](https://img.shields.io/badge/Docker-ready-blue)](https://www.docker.com/)
 [![License](https://img.shields.io/github/license/iplaycomputer/PersonaOCEAN)](LICENSE)
+[![Docker Image Version](https://ghcr-badge.egpl.dev/iplaycomputer/personaocean/latest_tag?color=blue)](https://github.com/iplaycomputer/PersonaOCEAN/pkgs/container/personaocean)
 
 [![Validate Roles](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/validate.yml/badge.svg)](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/validate.yml)
 [![Dependabot Status](https://img.shields.io/badge/Dependabot-enabled-brightgreen?logo=dependabot)](https://docs.github.com/code-security/dependabot)
@@ -116,7 +117,7 @@ Add your token:
 $env:DISCORD_BOT_TOKEN = "YOUR_DISCORD_BOT_TOKEN"
 ```
 
-Or create `.env` (auto-loaded):
+Or create `.env` (auto-loaded) — see `.env.example` for all available variables:
 
 ```dotenv
 DISCORD_BOT_TOKEN=YOUR_DISCORD_BOT_TOKEN
@@ -283,4 +284,10 @@ docker compose up --build
 ```
 
 The provided `docker-compose.yml` uses `restart: always` and JSON-file log rotation (10MB x 3 files).
+
+Pull the prebuilt image from GHCR:
+
+```bash
+docker pull ghcr.io/iplaycomputer/personaocean:latest
+```
 
