@@ -326,3 +326,14 @@ Create the secret (example):
 echo "YOUR_TOKEN" | docker secret create discord_bot_token -
 ```
 
+---
+
+## Releases pipeline
+
+[![Release + Docker Publish](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/release-and-publish.yml/badge.svg)](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/release-and-publish.yml)
+
+Push a tag like `v1.2.2` and CI will:
+
+- Build and push Docker images to GHCR (`latest` and the version tag)
+- Publish a GitHub Release using draft notes (or generated notes if none)
+
