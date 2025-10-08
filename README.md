@@ -255,7 +255,6 @@ PersonaOCEAN emits structured, JSON-like logs to stdout so you can trace behavio
 Tip: Pipe logs to a file or collector (e.g., `jq`/ELK) to filter by `event` or investigate latency (`duration_ms`).
 
 For a deeper operations playbook (jq filters, Windows PowerShell equivalents, alert ideas), see: [docs/ops.md](docs/ops.md).
-
 ### Run with Docker (optional)
 
 You can run PersonaOCEAN as a container. Structured logs are printed to stdout.
@@ -279,3 +278,4 @@ docker compose up --build
 ```
 
 The provided `docker-compose.yml` uses `restart: always` and JSON-file log rotation (10MB x 3 files).
+
