@@ -20,6 +20,8 @@ docker compose down
 docker compose down ; docker compose up -d
 ```
 
+Tip: You can start and stop the bot from Docker Desktop → Containers → personaocean → Start / Stop.
+
 ## Update to latest image (GHCR)
 
 ```powershell
@@ -45,18 +47,15 @@ docker compose logs -f bot | % { try { $_ | ConvertFrom-Json } catch { $null } }
 
 More filters and examples: see docs/ops.md
 
-## Health & recovery
+## Recovery
 
-- Health: container is marked healthy when its heartbeat file is fresh (~30s cadence)
-- Heartbeat is stored in `/tmp` (tmpfs) to keep the root filesystem read-only.
-- If `unhealthy`, check recent `cmd_error`, `send_error`, `defer_failed` in logs
+- If something looks off, check logs for `cmd_error`, `send_error`, or `defer_failed`.
 - Clean restart fixes most transient issues: `docker compose down ; docker compose up -d`
 
 ## Token management
 
-- Local dev: put DISCORD_BOT_TOKEN in `.env` (not committed)
-- Production: use a file-backed secret and set `DISCORD_BOT_TOKEN_FILE=/run/secrets/discord_bot_token`
-- Rotate the token monthly or if leaked; then restart the container
+- Put DISCORD_BOT_TOKEN in your environment (or `.env` for compose)
+- Rotate the token if leaked; then restart the container
 
 ## Re-tag and release (maintainer)
 

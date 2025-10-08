@@ -1,20 +1,7 @@
 version: "3.9"
 services:
   bot:
-    build: .
-    image: iplaycomputer/personaocean:dev
-    restart: always
+    image: ghcr.io/iplaycomputer/personaocean:latest
     environment:
       - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
-    # Optional: set resource limits (example)
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"

@@ -77,9 +77,7 @@ Useful alert ideas:
 - Median cmd_summary duration_ms over 2s
 - 5xx HTTPException rate from Discord API
 
-## Environment variables
-
-### Docker logs + jq (quick triage)
+## Docker logs + jq (quick triage)
 
 If running via Docker/Compose, you can filter logs similarly:
 
@@ -101,13 +99,9 @@ docker compose logs -f bot | ForEach-Object {
 
 > Note: If any log lines aren't valid JSON (e.g., platform metadata or partial lines), the try/catch will skip them.
 
-### HEALTHCHECK
+## Environment variables
 
-- The container writes a heartbeat timestamp to `/tmp/heartbeat` every ~30s.
-- Docker marks the container healthy if the file is fresh (≈ under 1 minute old).
-- If the container becomes `unhealthy`, check for recent `cmd_error`, `send_error`, or `defer_failed` events.
-
-- LOG_LEVEL: DEBUG/INFO/WARN/ERROR (default: INFO)
-- DISCORD_TOKEN: Bot token
-- (optional) GUILD_ID_ALLOWLIST: comma-separated list of guild IDs to allow (for staged rollouts)
+- DISCORD_BOT_TOKEN: Bot token (required)
+- LOG_LEVEL: DEBUG | INFO | WARN | ERROR (default: INFO)
+- DEV_GUILD_ID: Optional, speeds up slash command sync for one guild
 

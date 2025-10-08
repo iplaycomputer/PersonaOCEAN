@@ -282,96 +282,28 @@ Tip: Pipe logs to a file or collector (e.g., `jq`/ELK) to filter by `event` or i
 
 For a deeper operations playbook (jq filters, Windows PowerShell equivalents, alert ideas), see: [docs/ops.md](docs/ops.md).
 
-### Run with Docker (optional)
+### Quick Start (Docker)
 
-You can run PersonaOCEAN as a container. Structured logs are printed to stdout.
-
-Windows PowerShell example:
+Run the prebuilt image from GHCR (single-host Docker or Docker Desktop):
 
 ```powershell
-# Build image
-docker build -t personaocean:local .
-
-# Run container with env vars
-$env:DISCORD_BOT_TOKEN = "YOUR_TOKEN"; $env:LOG_LEVEL = "INFO"
-docker run --rm -it --name personaocean `
-  -e DISCORD_BOT_TOKEN=`"$env:DISCORD_BOT_TOKEN`" `
-  -e LOG_LEVEL=`"$env:LOG_LEVEL`" `
-  personaocean:local
-
-# Or using Docker Compose
-$env:DISCORD_BOT_TOKEN = "YOUR_TOKEN"; $env:LOG_LEVEL = "INFO"
-docker compose up --build
+docker run --rm -e DISCORD_BOT_TOKEN=YOUR_TOKEN ghcr.io/iplaycomputer/personaocean:latest
 ```
 
-The provided `docker-compose.yml` uses `restart: always` and JSON-file log rotation (10MB x 3 files).
+Optional environment:
 
-Pull the prebuilt image from GHCR:
+- LOG_LEVEL=INFO | DEBUG | WARN | ERROR (default: INFO)
 
-```bash
-docker pull ghcr.io/iplaycomputer/personaocean:latest
-```
-
-### Running safely (tokens)
-
-Local development (recommended): create a `.env` file next to `docker-compose.yml`:
-
-```dotenv
-DISCORD_BOT_TOKEN=YOUR_REAL_TOKEN
-LOG_LEVEL=INFO
-```
-
-Then run:
-
-```powershell
-docker compose up
-```
-
-Production/secrets: point to a file-backed secret (e.g., Docker Swarm/Kubernetes):
+Compose (optional):
 
 ```yaml
 services:
   bot:
+    image: ghcr.io/iplaycomputer/personaocean:latest
     environment:
-      - DISCORD_BOT_TOKEN_FILE=/run/secrets/discord_bot_token
-    # secrets:
-    #   - discord_bot_token
-# secrets:
-#   discord_bot_token:
-#     external: true
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
 ```
-
-Create the secret (example):
-
-```bash
-echo "YOUR_TOKEN" | docker secret create discord_bot_token -
-```
-
----
-
-### Security hardening (container)
-
-PersonaOCEAN's container is hardened by default to match production best practices:
-
-- Read-only root filesystem; only `/tmp` is writable via tmpfs.
-- Linux capabilities dropped (least privilege).
-- Resource limits: 1 CPU, 512 MB RAM (tune as needed).
-- Isolated bridge network (`personaocean_net`).
-- Secrets-ready: prefer `DISCORD_BOT_TOKEN_FILE=/run/secrets/discord_bot_token`.
-
-Production override (optional): keep local dev simple while production uses file-backed secrets.
-
-```powershell
-# Local dev
-docker compose up -d
-
-# Production (with override)
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-```
-
-See `docker-compose.prod.yml` for a minimal secrets wiring example.
-
----
 
 ## Releases pipeline
 
