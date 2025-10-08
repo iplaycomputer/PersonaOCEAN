@@ -1,5 +1,8 @@
 import os
 import sys
+import time
+import json
+import traceback
 import yaml
 import discord
 from dotenv import load_dotenv
@@ -90,7 +93,7 @@ async def send_safe(interaction: discord.Interaction, content: str = None, *, em
             await interaction.followup.send(content=content, embed=embed, ephemeral=ephemeral)
         else:
             await interaction.response.send_message(content=content, embed=embed, ephemeral=ephemeral)
-    except discord.HTTPException:
+    except (discord.HTTPException, discord.NotFound) as e:
         # Simple backoff: inform user
         try:
             msg = "⚠️ Rate limited, please try again."
@@ -100,6 +103,46 @@ async def send_safe(interaction: discord.Interaction, content: str = None, *, em
                 await interaction.response.send_message(msg, ephemeral=True)
         except Exception:
             pass
+        log_event("send_error", error=str(e), guild_id=getattr(interaction.guild, "id", None), user_id=getattr(interaction.user, "id", None))
+
+
+# --- Logging utilities ---
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+
+def _level_ok(level: str) -> bool:
+    order = {"DEBUG": 10, "INFO": 20, "WARNING": 30, "ERROR": 40}
+    return order.get(level, 20) >= order.get(LOG_LEVEL, 20)
+
+def log_event(event: str, **kwargs):
+    """Emit a structured log line as JSON to stdout."""
+    record = {
+        "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "event": event,
+        **kwargs,
+    }
+    try:
+        print(json.dumps(record, ensure_ascii=False))
+    except Exception:
+        # Fallback to simple print if JSON encoding fails
+        print(f"{record}")
+
+
+async def maybe_defer(interaction: discord.Interaction, *, ephemeral: bool = False):
+    """Defer the interaction if not already responded, extending the 3s window.
+    Use for longer-running commands (~>1s) to avoid 'Unknown interaction' errors.
+    """
+    try:
+        if not interaction.response.is_done():
+            await interaction.response.defer(thinking=True, ephemeral=ephemeral)
+            log_event(
+                "interaction_deferred",
+                guild_id=getattr(interaction.guild, "id", None),
+                user_id=getattr(interaction.user, "id", None),
+                cmd=getattr(interaction.command, "name", None),
+            )
+    except discord.HTTPException as e:
+        # If already acknowledged or token expired, just log
+        log_event("defer_failed", error=str(e), cmd=getattr(interaction.command, "name", None))
 
 
 @bot.tree.command(name="ocean", description="Get your archetype from OCEAN scores (0–120 each)")
@@ -139,11 +182,14 @@ async def ocean_command(
 
 @bot.tree.command(name="company", description="List members registered in this server (company)")
 async def company_command(interaction: discord.Interaction):
+    start = time.perf_counter()
     guild = interaction.guild
     guild_id = guild.id if guild else None
     if guild_id is None:
         await send_safe(interaction, "🏢 This command can only be used in a server.", ephemeral=True)
         return
+    # This may iterate many members; defer to avoid 3s timeout under load
+    await maybe_defer(interaction, ephemeral=False)
     registry = companies.get(guild_id, {})
     if not registry:
         await send_safe(interaction, "🏢 No members registered yet in this company.", ephemeral=True)
@@ -159,10 +205,18 @@ async def company_command(interaction: discord.Interaction):
         display = member.display_name if member else f"Unknown User ({uid})"
         lines.append(f"- {display}: {data['role']} ({data['dept']})")
     await send_safe(interaction, f"🏢 **{guild.name} Company Members:**\n" + "\n".join(lines), ephemeral=False)
+    log_event(
+        "cmd_company",
+        guild_id=guild_id,
+        user_id=getattr(interaction.user, "id", None),
+        members=len(registry),
+        duration_ms=int((time.perf_counter() - start) * 1000),
+    )
 
 
 @bot.tree.command(name="departments", description="List company members by department")
 async def departments_command(interaction: discord.Interaction):
+    start = time.perf_counter()
     guild = interaction.guild
     guild_id = guild.id if guild else None
     if guild_id is None:
@@ -173,6 +227,9 @@ async def departments_command(interaction: discord.Interaction):
     if not registry:
         await send_safe(interaction, "🏢 No members registered yet in this company.", ephemeral=True)
         return
+
+    # Defer early for potentially heavy grouping/formatting
+    await maybe_defer(interaction, ephemeral=False)
 
     # Group members by department
     depts: dict[str, list[str]] = {}
@@ -195,6 +252,13 @@ async def departments_command(interaction: discord.Interaction):
             lines.append(f"- {m}")
 
     await send_safe(interaction, "\n".join(lines), ephemeral=False)
+    log_event(
+        "cmd_departments",
+        guild_id=guild_id,
+        user_id=getattr(interaction.user, "id", None),
+        dept_count=len(depts),
+        duration_ms=int((time.perf_counter() - start) * 1000),
+    )
 
 
 @bot.tree.command(name="profile", description="See your stored archetype and OCEAN scores")
@@ -223,6 +287,7 @@ async def profile_command(interaction: discord.Interaction):
 @bot.tree.command(name="summary", description="See a quick company-wide archetype summary")
 @discord.app_commands.describe(detailed="Show detailed OCEAN averages with bars")
 async def summary_command(interaction: discord.Interaction, detailed: bool = False):
+    start = time.perf_counter()
     guild = interaction.guild
     guild_id = guild.id if guild else None
     if guild_id is None:
@@ -233,6 +298,9 @@ async def summary_command(interaction: discord.Interaction, detailed: bool = Fal
     if not registry:
         await send_safe(interaction, "🏢 No members registered yet in this company.", ephemeral=True)
         return
+
+    # Defer for heavier aggregation & embed construction
+    await maybe_defer(interaction, ephemeral=False)
 
     # Count totals
     total = len(registry)
@@ -322,37 +390,6 @@ async def summary_command(interaction: discord.Interaction, detailed: bool = Fal
         return "█" * filled + "░" * (5 - filled)
 
     if detailed:
-        bars = "\n".join([
-            f"{t}: {make_bar(norm[t])} ({norm[t]:+.2f})"
-            for t in ["O", "C", "E", "A", "N"]
-        ])
-        bars_section = f"\n\n**Average OCEAN Profile:**\n{bars}"
-    else:
-        bars_section = ""
-
-    # Optional compact text summary (goes below the bars)
-    if detailed:
-        sorted_avg = sorted(norm.items(), key=lambda kv: kv[1], reverse=True)
-        dominant, dom_val = sorted_avg[0]
-        weakest, weak_val = sorted_avg[-1]
-
-        def label_trait(t):
-            return {
-                "O": "Openness",
-                "C": "Conscientiousness",
-                "E": "Extraversion",
-                "A": "Agreeableness",
-                "N": "Neuroticism",
-            }[t]
-
-        balance_line = (
-            f"\n🧭 *Team OCEAN balance: {label_trait(dominant)} dominant, "
-            f"{label_trait(weakest)} low.*"
-        )
-    else:
-        balance_line = ""
-
-    if detailed:
         # Professional embed for detailed view
         embed = discord.Embed(
             title=f"🏢 {guild.name} — Company Summary",
@@ -410,6 +447,16 @@ async def summary_command(interaction: discord.Interaction, detailed: bool = Fal
         )
         await send_safe(interaction, msg, ephemeral=False)
 
+    log_event(
+        "cmd_summary",
+        guild_id=guild_id,
+        user_id=getattr(interaction.user, "id", None),
+        detailed=detailed,
+        members=total,
+        teamwork_index=round(teamwork_index, 3),
+        duration_ms=int((time.perf_counter() - start) * 1000),
+    )
+
 
 @bot.tree.command(name="help", description="Show available commands")
 async def help_command(interaction: discord.Interaction):
@@ -424,6 +471,7 @@ async def help_command(interaction: discord.Interaction):
         "/about — learn about the project and references.",
     ]
     await send_safe(interaction, "\n".join(lines), ephemeral=True)
+    log_event("cmd_help", guild_id=getattr(interaction.guild, "id", None), user_id=getattr(interaction.user, "id", None))
 
 
 @bot.tree.command(name="about", description="About PersonaOCEAN and scientific references")
@@ -439,6 +487,7 @@ async def about_command(interaction: discord.Interaction):
         "Ethics: For exploration only — not for high-stakes decisions."
     )
     await send_safe(interaction, msg, ephemeral=True)
+    log_event("cmd_about", guild_id=getattr(interaction.guild, "id", None), user_id=getattr(interaction.user, "id", None))
 
 
 @bot.tree.command(name="forget", description="Delete your stored OCEAN data from this server")
@@ -454,11 +503,12 @@ async def forget_command(interaction: discord.Interaction):
         await send_safe(interaction, "No stored data found for you in this server.", ephemeral=True)
     else:
         await send_safe(interaction, "Your stored data has been deleted for this server.", ephemeral=True)
+    log_event("cmd_forget", guild_id=guild_id, user_id=getattr(interaction.user, "id", None), removed=bool(removed))
 
 
 @bot.tree.error
 async def on_app_command_error(interaction: discord.Interaction, error: Exception):
-    # Basic global error handler for application commands
+    # Basic global error handler for application commands with structured logging
     try:
         msg = "⚠️ Something went wrong. Please try again."
         if interaction.response.is_done():
@@ -467,8 +517,15 @@ async def on_app_command_error(interaction: discord.Interaction, error: Exceptio
             await interaction.response.send_message(msg, ephemeral=True)
     except Exception:
         pass
-    # Log to console for operator visibility
-    print(f"App command error: {error}")
+    # Log rich context for operator visibility
+    log_event(
+        "cmd_error",
+        guild_id=getattr(interaction.guild, "id", None),
+        user_id=getattr(interaction.user, "id", None),
+        cmd=getattr(interaction.command, "name", None),
+        error=str(error),
+        traceback="\n".join(traceback.format_exception(type(error), error, error.__traceback__)),
+    )
 
 
 def run_discord():
