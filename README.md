@@ -162,6 +162,27 @@ All contributions must go through pull requests targeting the `main` branch.
 Pull requests are automatically validated by the `Validate Roles` workflow.
 Please ensure `roles.yaml` passes validation before requesting review.
 
+### 🧩 Contributors quickstart
+
+Want to help improve PersonaOCEAN?
+
+1. Fork the repo and clone your fork.
+1. Copy `.env.example` → `.env` and fill in your test token.
+1. Install pre-commit hooks to auto-fix formatting and YAML style:
+
+  ```bash
+  pip install pre-commit
+  pre-commit install
+  ```
+
+1. Run local validation before you push:
+
+  ```bash
+  python validate_roles.py
+  ```
+
+Push your branch and open a pull request — the CI will run `Validate Roles` automatically.
+
 Maintainer: [@iplaycomputer](https://github.com/iplaycomputer)
 
 Contributions are welcome! To keep things clean and consistent:
