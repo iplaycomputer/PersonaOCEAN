@@ -85,11 +85,21 @@ If running via Docker/Compose, you can filter logs similarly:
 
 Linux/macOS:
 
-  docker compose logs -f bot | jq 'select(.level=="ERROR")'
+```bash
+docker compose logs -f bot | jq 'select(.level=="ERROR")'
+```
+
+> Note: jq filters assume each log line is valid JSON (as emitted by PersonaOCEAN). Non-JSON lines (from the platform/engine) may be interleaved by some runtimes and will be skipped by jq.
 
 Windows PowerShell:
 
-  docker compose logs -f bot | ForEach-Object { $_ | ConvertFrom-Json } | Where-Object { $_.level -eq 'ERROR' }
+```powershell
+docker compose logs -f bot | ForEach-Object {
+  try { $_ | ConvertFrom-Json } catch { $null }
+} | Where-Object { $_ -and $_.level -eq 'ERROR' }
+```
+
+> Note: If any log lines aren't valid JSON (e.g., platform metadata or partial lines), the try/catch will skip them.
 
 ### HEALTHCHECK
 
