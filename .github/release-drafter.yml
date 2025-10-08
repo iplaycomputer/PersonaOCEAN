@@ -1,0 +1,37 @@
+name-template: 'v$NEXT_PATCH_VERSION'
+tag-template: 'v$NEXT_PATCH_VERSION'
+template: |
+  ## $RESOLVED_VERSION — $DATE
+
+  ### 🚀 Features
+  $CHANGES_PR_LABELS:feature
+
+  ### 🐛 Fixes
+  $CHANGES_PR_LABELS:fix
+
+  ### 🧹 Chores & Docs
+  $CHANGES_PR_LABELS:docs, chore, refactor
+
+  ### 🔧 Maintenance
+  $CHANGES_PR_LABELS:deps, build, ci
+
+categories:
+  - title: '🚀 Features'
+    labels:
+      - feature
+  - title: '🐛 Fixes'
+    labels:
+      - fix
+  - title: '🧹 Chores & Docs'
+    labels:
+      - docs
+      - chore
+      - refactor
+  - title: '🔧 Maintenance'
+    labels:
+      - deps
+      - build
+      - ci
+
+exclude-labels:
+  - skip-changelog

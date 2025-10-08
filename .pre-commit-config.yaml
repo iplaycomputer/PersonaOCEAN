@@ -2,6 +2,35 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: mixed-line-ending
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.41.0
+    hooks:
+      - id: markdownlint
+        args: ["--disable", "MD013"]  # ignore line-length; project uses long lines in tables/URLs
+
+  - repo: local
+    hooks:
+      - id: validate-roles
+        name: validate roles.yaml
+        entry: python validate_roles.py
+        language: system
+        files: ^roles\.yaml$
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
