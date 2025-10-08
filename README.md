@@ -72,7 +72,9 @@ Notes for admins:
 Run the prebuilt image from GHCR (Docker or Docker Desktop):
 
 ```powershell
-docker run --rm -e DISCORD_BOT_TOKEN=YOUR_TOKEN ghcr.io/iplaycomputer/personaocean:latest
+# Safer: put the token in a local .env file and pass it to Docker
+Set-Content -Path .env -Value "DISCORD_BOT_TOKEN=YOUR_TOKEN`nLOG_LEVEL=INFO"
+docker run --rm --env-file .env ghcr.io/iplaycomputer/personaocean:latest
 ```
 
 ### Invite URL (owner-only)
@@ -92,6 +94,12 @@ Notes:
 - No Message Content intent required for slash commands.
 
 More docs: See `docs/OPS-CHEATSHEET.md` and `docs/ops.md`.
+
+### Troubleshooting
+
+- Hangs at "discord.client logging in using static token": wait ~1–2 minutes and retry. This can happen under Discord API rate limits after rapid restarts. We now exit cleanly on invalid tokens; regenerate the token in the Developer Portal if needed.
+- Commands slow to appear: global slash commands can take up to an hour to propagate when the bot first joins a server. For faster iteration, set `DEV_GUILD_ID` to sync to one guild.
+- Keep tokens out of your shell history: prefer `--env-file .env` over `-e DISCORD_BOT_TOKEN=...`.
 
 ## Contributing
 

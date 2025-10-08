@@ -529,6 +529,7 @@ async def help_command(interaction: discord.Interaction):
 
 
 @bot.tree.command(name="about", description="About PersonaOCEAN and scientific references")
+@discord.app_commands.checks.cooldown(1, 10.0)
 async def about_command(interaction: discord.Interaction):
     repo_url = "https://github.com/iplaycomputer/PersonaOCEAN"
     docs_path = "docs/SCIENTIFIC_FRAMEWORK.txt"
@@ -562,6 +563,26 @@ async def forget_command(interaction: discord.Interaction):
 
 @bot.tree.error
 async def on_app_command_error(interaction: discord.Interaction, error: Exception):
+    # Friendly cooldown feedback takes precedence
+    if isinstance(error, discord.app_commands.CommandOnCooldown):
+        try:
+            await send_safe(
+                interaction,
+                f"⏳ You're going too fast. Try again in {error.retry_after:.1f}s.",
+                ephemeral=True,
+            )
+        except Exception:
+            pass
+        log_event(
+            "cooldown_hit",
+            level="INFO",
+            guild_id=getattr(interaction.guild, "id", None),
+            user_id=getattr(interaction.user, "id", None),
+            channel_id=getattr(getattr(interaction, "channel", None), "id", None),
+            cmd=getattr(interaction.command, "name", None),
+            retry_after=round(getattr(error, "retry_after", 0.0), 3),
+        )
+        return
     try:
         msg = "⚠️ Something went wrong. Please try again."
         if interaction.response.is_done():
@@ -604,8 +625,17 @@ def run_discord():
             "Tip: For a quick local test without Discord, run: python main.py 105 90 95 83 60"
         )
         sys.exit(1)
-    # Use the globally decorated bot instance
-    bot.run(token)
+    # Use the globally decorated bot instance with guarded login to avoid silent hangs
+    try:
+        bot.run(token)
+    except discord.errors.LoginFailure as e:
+        log_event("login_failed", level="ERROR", error=str(e))
+        print(f"❌ Login failed: {e}. Check DISCORD_BOT_TOKEN or regenerate the token.")
+        sys.exit(1)
+    except Exception as e:
+        log_event("login_error", level="ERROR", error=str(e))
+        print(f"❌ Unexpected error during login: {e}")
+        sys.exit(1)
 
 
 # --- CLI fallback for quick testing ---
