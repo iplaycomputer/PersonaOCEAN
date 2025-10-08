@@ -48,6 +48,7 @@ More filters and examples: see docs/ops.md
 ## Health & recovery
 
 - Health: container is marked healthy when its heartbeat file is fresh (~30s cadence)
+- Heartbeat is stored in `/tmp` (tmpfs) to keep the root filesystem read-only.
 - If `unhealthy`, check recent `cmd_error`, `send_error`, `defer_failed` in logs
 - Clean restart fixes most transient issues: `docker compose down ; docker compose up -d`
 

@@ -349,6 +349,30 @@ echo "YOUR_TOKEN" | docker secret create discord_bot_token -
 
 ---
 
+### Security hardening (container)
+
+PersonaOCEAN's container is hardened by default to match production best practices:
+
+- Read-only root filesystem; only `/tmp` is writable via tmpfs.
+- Linux capabilities dropped (least privilege).
+- Resource limits: 1 CPU, 512 MB RAM (tune as needed).
+- Isolated bridge network (`personaocean_net`).
+- Secrets-ready: prefer `DISCORD_BOT_TOKEN_FILE=/run/secrets/discord_bot_token`.
+
+Production override (optional): keep local dev simple while production uses file-backed secrets.
+
+```powershell
+# Local dev
+docker compose up -d
+
+# Production (with override)
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+```
+
+See `docker-compose.prod.yml` for a minimal secrets wiring example.
+
+---
+
 ## Releases pipeline
 
 [![Release + Docker Publish](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/release-and-publish.yml/badge.svg)](https://github.com/iplaycomputer/PersonaOCEAN/actions/workflows/release-and-publish.yml)
