@@ -101,3 +101,6 @@ End of Framework
 
 This file serves as the citation backbone of PersonaOCEAN — a full scientific audit trail.
 It’s repository-ready and can be linked from README.md under a “Scientific References” section.
+
+Provenance note (Facet Framework roadmap):
+Facet-level structure and normalization methods will align with rubynor/bigfive-web (MIT license), which maps to IPIP-NEO-120 facets (Costa & McCrae, 1992). PersonaOCEAN adopts this structure to ensure empirical consistency and open reproducibility.

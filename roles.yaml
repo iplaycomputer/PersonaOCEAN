@@ -64,3 +64,8 @@ roles:
     dept: Community & HR
     desc: >-
       Empathic and dependable contributor focused on helping others succeed.
+
+# Example facet pattern (for future schema):
+# facet_pattern:
+#   Imagination: 0.8
+#   Intellect: 0.7

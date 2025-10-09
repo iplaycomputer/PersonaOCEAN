@@ -19,6 +19,35 @@ import yaml
 ROLES_FILE = Path(__file__).with_name("roles.yaml")
 
 REQUIRED_KEYS = {"O", "C", "E", "A", "N"}
+# Heuristic: facet keys are typically short (single words or brief phrases).
+# 40 chars is a conservative upper bound; longer keys are likely typos or generator errors.
+MAX_FACET_KEY_LENGTH = 40
+
+# Optional facet support: accept a 'facet_pattern' mapping with numeric weights in [-1,1].
+# We do not enforce a global list of facet names here to remain non-breaking, but warn on suspicious keys.
+def _validate_facet_pattern(name: str, meta: dict) -> tuple[int, int]:
+    errors = 0
+    warnings = 0
+    facet_pat = meta.get("facet_pattern")
+    if facet_pat is None:
+        return errors, warnings
+    if not isinstance(facet_pat, dict):
+        print(f"❌ Role '{name}' facet_pattern must be a mapping if present")
+        return 1, warnings
+    for fk, fv in facet_pat.items():
+        if not is_number(fv):
+            print(f"❌ Role '{name}' facet_pattern '{fk}' must be numeric, got {type(fv).__name__}")
+            errors += 1
+            continue
+        vf = float(fv)
+        if vf < -1.0 or vf > 1.0:
+            print(f"❌ Role '{name}' facet_pattern '{fk}' out of range [-1,1]: {vf}")
+            errors += 1
+        # Heuristic warning: unusually long facet key may indicate typos
+        if isinstance(fk, str) and len(fk) > MAX_FACET_KEY_LENGTH:
+            print(f"⚠️  Role '{name}' facet key looks unusual (>{MAX_FACET_KEY_LENGTH} chars): {fk!r}")
+            warnings += 1
+    return errors, warnings
 
 
 def is_number(x) -> bool:
@@ -82,6 +111,11 @@ def validate_roles(path: Path) -> int:
         if all(float(pattern.get(k, 0)) == 0.0 for k in REQUIRED_KEYS):
             print(f"⚠️  Role '{name}' has all-zero weights; it will never match.")
             warnings += 1
+
+        # Optional facet_pattern checks (non-breaking)
+        e2, w2 = _validate_facet_pattern(name, meta)
+        errors += e2
+        warnings += w2
 
     if errors == 0:
         print("✅ roles.yaml validation passed")
