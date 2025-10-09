@@ -19,6 +19,8 @@ import yaml
 ROLES_FILE = Path(__file__).with_name("roles.yaml")
 
 REQUIRED_KEYS = {"O", "C", "E", "A", "N"}
+# Heuristic: facet keys are typically short (single words or brief phrases).
+# 40 chars is a conservative upper bound; longer keys are likely typos or generator errors.
 MAX_FACET_KEY_LENGTH = 40
 
 # Optional facet support: accept a 'facet_pattern' mapping with numeric weights in [-1,1].

@@ -9,10 +9,9 @@ Purpose
 This is a non-breaking stub to support future facet-level features.
 """
 from __future__ import annotations
-from typing import Dict, List
 
 # Canonical facet map (names mirror rubynor/bigfive-web)
-FACET_MAP: Dict[str, List[str]] = {
+FACET_MAP: dict[str, list[str]] = {
     "O": [
         "Imagination",
         "Artistic interests",

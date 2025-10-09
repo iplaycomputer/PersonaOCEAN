@@ -15,6 +15,9 @@ try:
 except Exception:
     normalize_facets_payload = None  # gracefully absent if module not present
 
+# Preview limits / knobs
+MAX_PREVIEW_FACETS = 8
+
 # --- Load roles ---
 def load_roles(path: str = "roles.yaml"):
     with open(path, "r", encoding="utf-8") as f:
@@ -599,7 +602,7 @@ async def import_json_command(interaction: discord.Interaction, attachment: disc
         raw_bytes = await attachment.read()
         data = json.loads(raw_bytes.decode("utf-8"))
         facets = normalize_facets_payload(data)
-        shown = ", ".join(list(facets.keys())[:8]) or "(none)"
+        shown = ", ".join(list(facets.keys())[:MAX_PREVIEW_FACETS]) or "(none)"
         await send_safe(
             interaction,
             f"Imported JSON parsed. Example facets: {shown}\nNote: This is a preview; no data stored.",
