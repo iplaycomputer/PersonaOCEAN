@@ -7,6 +7,7 @@ import yaml
 import discord
 from dotenv import load_dotenv
 from collections import Counter
+from typing import Optional
 
 # --- Load roles ---
 def load_roles(path: str = "roles.yaml"):
@@ -339,9 +340,16 @@ async def profile_command(interaction: discord.Interaction):
 
 
 @bot.tree.command(name="summary", description="See a quick company-wide archetype summary")
-@discord.app_commands.describe(detailed="Show detailed OCEAN averages with bars")
-async def summary_command(interaction: discord.Interaction, detailed: bool = False):
+@discord.app_commands.describe(mode="Choose 'concise' or 'detailed' output")
+@discord.app_commands.choices(
+    mode=[
+        discord.app_commands.Choice(name="Concise", value="concise"),
+        discord.app_commands.Choice(name="Detailed", value="detailed"),
+    ]
+)
+async def summary_command(interaction: discord.Interaction, mode: Optional[str] = None):
     start = time.perf_counter()
+    is_detailed = (mode == "detailed")
     guild = interaction.guild
     guild_id = guild.id if guild else None
     if guild_id is None:
@@ -443,7 +451,7 @@ async def summary_command(interaction: discord.Interaction, detailed: bool = Fal
         filled = int((value + 1) * 2.5)
         return "█" * filled + "░" * (5 - filled)
 
-    if detailed:
+    if is_detailed:
         # Professional embed for detailed view
         embed = discord.Embed(
             title=f"🏢 {guild.name} — Company Summary",
@@ -505,7 +513,7 @@ async def summary_command(interaction: discord.Interaction, detailed: bool = Fal
         "cmd_summary",
         guild_id=guild_id,
         user_id=getattr(interaction.user, "id", None),
-        detailed=detailed,
+        detailed=is_detailed,
         members=total,
         teamwork_index=round(teamwork_index, 3),
         duration_ms=int((time.perf_counter() - start) * 1000),
