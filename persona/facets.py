@@ -56,11 +56,17 @@ FACET_MAP: Dict[str, List[str]] = {
 }
 
 
-def normalize_01_to_signed(value: float) -> float:
+def normalize_01_to_signed(value: float | None) -> float:
     """Map 0..1 → −1..+1; clamps outside inputs.
     Examples: 0.0→-1.0, 0.5→0.0, 1.0→+1.0
     """
-    v = 0.0 if value is None else float(value)
+    if value is None:
+        v = 0.0
+    else:
+        try:
+            v = float(value)
+        except Exception:
+            v = 0.0
     if v < 0.0:
         v = 0.0
     if v > 1.0:

@@ -19,6 +19,7 @@ import yaml
 ROLES_FILE = Path(__file__).with_name("roles.yaml")
 
 REQUIRED_KEYS = {"O", "C", "E", "A", "N"}
+MAX_FACET_KEY_LENGTH = 40
 
 # Optional facet support: accept a 'facet_pattern' mapping with numeric weights in [-1,1].
 # We do not enforce a global list of facet names here to remain non-breaking, but warn on suspicious keys.
@@ -41,8 +42,8 @@ def _validate_facet_pattern(name: str, meta: dict) -> tuple[int, int]:
             print(f"❌ Role '{name}' facet_pattern '{fk}' out of range [-1,1]: {vf}")
             errors += 1
         # Heuristic warning: unusually long facet key may indicate typos
-        if isinstance(fk, str) and len(fk) > 40:
-            print(f"⚠️  Role '{name}' facet key looks unusual (>{40} chars): {fk!r}")
+        if isinstance(fk, str) and len(fk) > MAX_FACET_KEY_LENGTH:
+            print(f"⚠️  Role '{name}' facet key looks unusual (>{MAX_FACET_KEY_LENGTH} chars): {fk!r}")
             warnings += 1
     return errors, warnings
 
