@@ -528,7 +528,7 @@ async def help_command(interaction: discord.Interaction):
         "/profile — view your current archetype and OCEAN scores.",
         "/company — list members registered in this server (company).",
         "/departments — list members grouped by department.",
-        "/summary — view company-wide department and role summary.",
+        "/summary — view company-wide summary (add 'mode: Detailed' for charts).",
         "/forget — delete your stored data from this server.",
         "/about — learn about the project and references.",
     ]
