@@ -9,6 +9,12 @@ from dotenv import load_dotenv
 from collections import Counter
 from typing import Optional
 
+# Optional facet support scaffolding (non-breaking)
+try:
+    from persona.facets import normalize_facets_payload  # type: ignore
+except Exception:
+    normalize_facets_payload = None  # gracefully absent if module not present
+
 # --- Load roles ---
 def load_roles(path: str = "roles.yaml"):
     with open(path, "r", encoding="utf-8") as f:
@@ -567,6 +573,55 @@ async def forget_command(interaction: discord.Interaction):
     else:
         await send_safe(interaction, "Your stored data has been deleted for this server.", ephemeral=True)
     log_event("cmd_forget", guild_id=guild_id, user_id=getattr(interaction.user, "id", None), removed=bool(removed))
+
+
+@bot.tree.command(name="import_json", description="Import Big Five test results (JSON from bigfive-web). [Preview only]")
+async def import_json_command(interaction: discord.Interaction, attachment: discord.Attachment):
+    """Skeleton importer. Reads attached JSON and previews normalized facets.
+    Non-breaking: does not mutate state yet. Uses existing safe-send and logging.
+    """
+    start = time.perf_counter()
+    await maybe_defer(interaction, ephemeral=True)
+    if normalize_facets_payload is None:
+        await send_safe(
+            interaction,
+            "Facet import not enabled in this build. Please ensure persona/facets.py is available.",
+            ephemeral=True,
+        )
+        log_event(
+            "cmd_import_json_disabled",
+            level="WARN",
+            guild_id=getattr(interaction.guild, "id", None),
+            user_id=getattr(interaction.user, "id", None),
+        )
+        return
+    try:
+        raw_bytes = await attachment.read()
+        data = json.loads(raw_bytes.decode("utf-8"))
+        facets = normalize_facets_payload(data)
+        shown = ", ".join(list(facets.keys())[:8]) or "(none)"
+        await send_safe(
+            interaction,
+            f"Imported JSON parsed. Example facets: {shown}\nNote: This is a preview; no data stored.",
+            ephemeral=True,
+        )
+        log_event(
+            "cmd_import_json",
+            guild_id=getattr(interaction.guild, "id", None),
+            user_id=getattr(interaction.user, "id", None),
+            facet_count=len(facets),
+            duration_ms=int((time.perf_counter() - start) * 1000),
+        )
+    except Exception as e:
+        await send_safe(interaction, "Failed to parse the attached JSON.", ephemeral=True)
+        log_event(
+            "cmd_import_json_error",
+            level="ERROR",
+            guild_id=getattr(interaction.guild, "id", None),
+            user_id=getattr(interaction.user, "id", None),
+            error=str(e),
+            duration_ms=int((time.perf_counter() - start) * 1000),
+        )
 
 
 @bot.tree.error
